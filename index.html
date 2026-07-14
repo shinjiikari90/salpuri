@@ -74,11 +74,22 @@
             border-radius: 999px;
         }
 
-        /* Custom inputs for iOS Safari Safari safeguard */
+        /* Custom inputs for iOS Safari safeguard & select centering */
         input, select, button {
             font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
             -webkit-appearance: none;   /* Removes iOS default styling shadows */
             border-radius: 12px;
+        }
+
+        /* Guarantee absolute centering for selectors in Safari */
+        select {
+            text-align: center !important;
+            text-align-last: center !important;
+            -moz-text-align-last: center !important;
+            -webkit-text-align-last: center !important;
+        }
+        select option {
+            text-align: center !important;
         }
     </style>
 </head>
@@ -160,17 +171,27 @@
                     </div>
                 </div>
 
-                <!-- Birth Date: Custom Numeric Input + Select Hybrid for iOS Safari Safety -->
+                <!-- Birth Date: Advanced Hybrid Combobox (Year, Month, Day) -->
                 <div>
-                    <label class="block text-xs font-bold text-purple-900 mb-1.5">생년월일 (직접 입력 또는 선택)</label>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="block text-xs font-bold text-purple-900">생년월일 (선택 및 직접 입력 가능)</label>
+                    </div>
                     <div class="grid grid-cols-12 gap-2">
-                        <!-- Year: Numeric Input with max 4 chars -->
-                        <div class="col-span-5 relative">
-                            <input type="text" id="birth-year" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="년(YYYY)" value="2000" class="w-full text-center px-2 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm">
+                        <!-- Year Hybrid Combobox -->
+                        <div class="col-span-5 relative" id="year-combobox-container">
+                            <input type="text" id="birth-year" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="년(YYYY)" value="2000" class="w-full text-center pl-2 pr-6 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm" autocomplete="off">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-purple-400">
+                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            </div>
+                            <!-- Popover drop list -->
+                            <div id="year-dropdown" class="absolute z-30 left-0 right-0 mt-1 max-h-44 overflow-y-auto bg-white border border-purple-100 rounded-xl shadow-lg hidden divide-y divide-purple-50/50">
+                                <!-- Populated dynamically -->
+                            </div>
                         </div>
-                        <!-- Month: Elegant custom select dropdown -->
-                        <div class="col-span-3 relative">
-                            <select id="birth-month" class="w-full text-center px-1 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm cursor-pointer">
+                        
+                        <!-- Month: Centered dropdown -->
+                        <div class="col-span-3 relative flex items-center justify-center">
+                            <select id="birth-month" class="w-full text-center px-1 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm cursor-pointer" style="text-align-last: center; text-align: center;">
                                 <option value="1" selected>1월</option>
                                 <option value="2">2월</option>
                                 <option value="3">3월</option>
@@ -185,9 +206,17 @@
                                 <option value="12">12월</option>
                             </select>
                         </div>
-                        <!-- Day: Numeric Input with max 2 chars -->
-                        <div class="col-span-4 relative">
-                            <input type="text" id="birth-day" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="일(DD)" value="01" class="w-full text-center px-2 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm">
+                        
+                        <!-- Day Hybrid Combobox -->
+                        <div class="col-span-4 relative" id="day-combobox-container">
+                            <input type="text" id="birth-day" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="일(DD)" value="01" class="w-full text-center pl-2 pr-6 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm" autocomplete="off">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-purple-400">
+                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            </div>
+                            <!-- Popover drop list -->
+                            <div id="day-dropdown" class="absolute z-30 left-0 right-0 mt-1 max-h-44 overflow-y-auto bg-white border border-purple-100 rounded-xl shadow-lg hidden divide-y divide-purple-50/50">
+                                <!-- Populated dynamically -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -196,19 +225,19 @@
                 <div>
                     <label class="block text-xs font-bold text-purple-900 mb-1.5">태어난 사주시 (12간지)</label>
                     <div class="relative">
-                        <select id="birth-saju-time" class="w-full px-4 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm cursor-pointer">
-                            <option value="자" selected>자시 (子時) - 밤 11시 30분 ~ 새벽 1시 29분</option>
-                            <option value="축">축시 (丑時) - 새벽 1시 30분 ~ 새벽 3시 29분</option>
-                            <option value="인">인시 (寅時) - 새벽 3시 30분 ~ 새벽 5시 29분</option>
-                            <option value="묘">묘시 (卯時) - 아침 5시 30분 ~ 아침 7시 29분</option>
-                            <option value="진">진시 (辰時) - 아침 7시 30분 ~ 오전 9시 29분</option>
-                            <option value="사">사시 (巳時) - 오전 9시 30분 ~ 오전 11시 29분</option>
-                            <option value="오">오시 (午時) - 오전 11시 30분 ~ 오후 1시 29분</option>
-                            <option value="미">미시 (未時) - 오후 1시 30분 ~ 오후 3시 29분</option>
-                            <option value="신">신시 (申時) - 오후 3시 30분 ~ 오후 5시 29분</option>
-                            <option value="유">유시 (酉時) - 오후 5시 30분 ~ 저녁 7시 29분</option>
-                            <option value="술">술시 (戌時) - 저녁 7시 30분 ~ 밤 9시 29분</option>
-                            <option value="해">해시 (亥時) - 밤 9시 30분 ~ 밤 11시 29분</option>
+                        <select id="birth-saju-time" class="w-full px-4 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm cursor-pointer" style="text-align-last: center; text-align: center;">
+                            <option value="자" selected>자시 (子時) - 밤 11:30 ~ 새벽 1:29</option>
+                            <option value="축">축시 (丑時) - 새벽 1:30 ~ 새벽 3:29</option>
+                            <option value="인">인시 (寅時) - 새벽 3:30 ~ 새벽 5:29</option>
+                            <option value="묘">묘시 (卯時) - 아침 5:30 ~ 아침 7:29</option>
+                            <option value="진">진시 (辰時) - 아침 7:30 ~ 오전 9:29</option>
+                            <option value="사">사시 (巳時) - 오전 9:30 ~ 오전 11:29</option>
+                            <option value="오">오시 (午時) - 오전 11:30 ~ 오후 1:29</option>
+                            <option value="미">미시 (未時) - 오후 1:30 ~ 오후 3:29</option>
+                            <option value="신">신시 (申時) - 오후 3:30 ~ 오후 5:29</option>
+                            <option value="유">유시 (酉時) - 오후 5:30 ~ 저녁 7:29</option>
+                            <option value="술">술시 (戌時) - 저녁 7:30 ~ 밤 9:29</option>
+                            <option value="해">해시 (亥時) - 밤 9:30 ~ 밤 11:29</option>
                             <option value="모름">모름 - 태어난 시간대 모름</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-purple-400">
@@ -262,7 +291,7 @@
             
             <!-- Saju Palja Manseok Table (Highly Requested for Authenticity) -->
             <div class="glass-card rounded-3xl p-4 mb-4 border border-purple-150 shadow-sm text-center relative overflow-hidden">
-                <div class="text-[11px] font-bold text-purple-500 uppercase tracking-widest mb-2"><i class="fa-solid fa-scroll mr-1 text-purple-400"></i> 당신의 명리학 사주사주 (四柱八字)</div>
+                <div class="text-[11px] font-bold text-purple-500 uppercase tracking-widest mb-2"><i class="fa-solid fa-scroll mr-1 text-purple-400"></i> 당신의 명리학 사주명식 (四柱八字)</div>
                 
                 <!-- Grid of Pillars -->
                 <div class="grid grid-cols-4 gap-1 bg-purple-50/70 p-2 rounded-2xl border border-purple-100/50">
@@ -367,7 +396,7 @@
                         </span>
                         <div>
                             <h5 class="font-bold text-xs text-neutral-800">주의해야 할 살(煞)의 움직임</h5>
-                            <p class="text-xs text-neutral-500 mt-1 leading-relaxed" id="worry-sal-desc">
+                            <p class="text-xs text-neutral-500 mt-1 leading-relaxed text-justify" id="worry-sal-desc">
                                 이번 주기엔 마음이 쉽게 흩어지며 일의 마무리가 약해지는 '걱정살'의 기운이 살짝 스며있습니다.
                             </p>
                         </div>
@@ -379,7 +408,7 @@
                         </span>
                         <div>
                             <h5 class="font-bold text-xs text-neutral-800">관계와 마음의 그늘</h5>
-                            <p class="text-xs text-neutral-500 mt-1 leading-relaxed" id="worry-mind-desc">
+                            <p class="text-xs text-neutral-500 mt-1 leading-relaxed text-justify" id="worry-mind-desc">
                                 타인에게 인정받고 싶은 열망이 지나치면 가벼운 오해가 생길 수 있으니, 말은 반으로 줄이고 듣기를 한 걸음 더 하시는 것이 이롭습니다.
                             </p>
                         </div>
@@ -469,7 +498,7 @@
                 <!-- Flow: Hold & Release Visual Ritual -->
                 <div id="manifest-step-2" class="hidden space-y-4">
                     <div class="glass-card rounded-3xl p-5 border border-purple-100 text-center relative overflow-hidden">
-                        <button onclick="goBackToManifest1()" class="absolute top-4 left-4 text-purple-400 text-xs"><i class="fa-solid fa-chevron-left mr-1"></i>이전</button>
+                        <button onclick="goBackToManifest1()" class="absolute top-4 left-4 text-purple-400 text-xs flex items-center gap-1"><i class="fa-solid fa-chevron-left"></i>이전</button>
                         
                         <span id="selected-aura-badge" class="inline-block bg-pink-100 text-pink-600 text-[11px] px-3 py-1 rounded-full font-bold mb-3 mt-2">사랑의 핑크색 오라</span>
                         <h5 class="text-sm font-bold text-purple-950 mb-3">소망하는 문장을 상세히 새겨보세요</h5>
@@ -512,7 +541,7 @@
                         </div>
 
                         <div class="flex-grow flex flex-col justify-center px-2">
-                            <p id="talisman-wish-display" class="text-xs font-bold text-amber-900 leading-relaxed italic">
+                            <p id="talisman-wish-display" class="text-xs font-bold text-amber-900 leading-relaxed italic text-center">
                                 "나를 온전히 안아주고 사랑해 줄 다정하고 예쁜 인연을 올해 안에 마주하여 행복한 우주를 만듭니다."
                             </p>
                         </div>
@@ -586,7 +615,55 @@
             { hanja: "亥", hangul: "해", animal: "돼지", element: "수(水)" }
         ];
 
-        // Mock fallback results for immediate action in case API is disconnected or limited
+        // Saju elements description presets to ensure maximum personalized variety and lengthy descriptions
+        const sajuElementPresets = {
+            "목(木)": {
+                summary: "곧게 뻗어나가는 든든한 고목나무 혹은 유연한 등나무처럼 생동감 넘치는 봄의 기운입니다.",
+                vibe: "목성(Jupiter)의 강력한 성장 시그널과 결합해 새로운 계획과 창의적인 파동을 일으킵니다.",
+                career: "기존의 틀에 갇히기보다는 스스로 프로젝트를 주도하거나 기획하는 자리에 설 때 우주의 가호를 받습니다. 귀하의 추진력이 빛을 발할 때이니 새로운 기술이나 지식 습득에 과감히 투자하십시오. 주저하기보다는 일단 씨앗을 뿌린다는 마음으로 덤비면 3달 안에 큰 성과를 보게 됩니다.",
+                love: "마음속에 품은 순수한 열정이 상대방에게 고스란히 전달되는 주간입니다. 거창한 이벤트보다는 담벼락 옆 작은 골목이나 나무가 우거진 카페에서 도란도란 이야기를 나누는 소박한 만남 속에 우주의 연인 주파수가 강력히 동조합니다. 서두르지 않는 다정함이 사랑의 깊이를 더해줄 것입니다.",
+                wealth: "목돈을 쥐고 흔들기보다는 내면의 자산을 살찌우는 것에 지출할 때 수호 정렬이 탄탄해집니다. 당장의 이익에 매몰되기 쉬우나 교육이나 장비 등 내 생산성을 높여주는 도구에 과감히 투자하면, 가을철에 그 몇 배에 달하는 거대한 금전적 이익으로 귀환할 대길의 흐름입니다.",
+                relations: "귀하의 바르고 활기찬 오라(Aura)를 보고 다가오는 인연들이 무척 많아집니다. 다만, 모든 가지를 다 뻗으려 하면 본체 나무가 꺾이듯 사소한 인맥에 감정을 낭비하지 않는 단호함이 필요합니다. 정말 믿음직하고 깊은 물빛을 지닌 동료 1-2명과 깊은 유대를 구축하는 것이 장기적으로 평안합니다.",
+                health: "새싹이 솟아오르듯 활동력이 강한 기운이지만 그만큼 피로가 근육이나 신경계에 쉽게 누적되는 명식입니다. 과도한 목(木) 기운의 조율을 위해 잠들기 전 5분 동안 숲소리를 들으며 어깨와 목의 뭉친 곳을 풀어주고, 스트레칭을 생활화하는 것이 우주 피로를 막는 방패가 됩니다."
+            },
+            "화(火)": {
+                summary: "세상을 환하게 비추는 찬란한 태양이거나 밤하늘을 수놓는 모닥불처럼 정열적이고 화사한 기운입니다.",
+                vibe: "화성(Mars)의 역동적이며 과감한 야망의 궤도와 동조하여 매력을 마음껏 발산하는 주기를 지나고 있습니다.",
+                career: "나의 잠재력을 주위 사람들에게 가감 없이 공개하고 자랑하기에 가장 좋은 시기를 맞이했습니다. 프리젠테이션이나 면접, 제안서 제출 등 나를 각인시켜야 하는 영역에서 심사위원들의 주파수를 흔들어 놓을 수 있습니다. 부끄러워 말고 무대의 주인공이 되어 중심에 서십시오.",
+                love: "불꽃처럼 화려하게 타오르는 연애운이 형성되는 때입니다. 첫눈에 매료될 만한 강렬한 스파크가 튀는 만남이 다가오고 있으며, 익숙한 공간보다는 다채로운 미디어가 흐르는 축제나 미술 전시회 같은 힙하고 뜨거운 공간에서 우주의 핑크빛 오라가 폭발적으로 활성화됩니다.",
+                wealth: "유행을 타는 단기적 투자나 충동적인 소비는 오히려 가뭄에 불을 붙이듯 재정적 갈증을 자아낼 수 있습니다. 통장에 자금을 잠시 묶어두는 수(水) 성향의 절제가 필요하며, 눈에 보이는 화려함에 현혹되지 않고 내실 있는 연금이나 저축성 자산에 한 걸음 다가가는 것이 안전판이 됩니다.",
+                relations: "주변을 환히 밝히는 성품 덕에 사람들이 자석처럼 귀하 주위로 모여드는 시점입니다. 하지만 불이 너무 뜨거우면 상대가 상처를 입듯 직설적인 조언이나 지나친 참견은 뜻하지 않은 구설을 낳을 수 있으니 한 템포 부드럽게 감싸 쥐는 쿠션 언어를 사용하는 지혜를 발휘해 보세요.",
+                health: "심장의 열기와 혈액 순환이 다소 과열되기 쉬운 국면이니 가벼운 반신욕이나 시원한 대나무 무늬 베개를 이용해 머리를 차갑게 식혀주는 것이 좋습니다. 탄산음료보다는 맑은 보리차나 정제된 냉수를 한 모금씩 천천히 들이켜 우주 화기를 정돈해야 상쾌한 수면을 보장받을 수 있습니다."
+            },
+            "토(土)": {
+                summary: "생명체들을 묵묵히 품어주는 대지처럼 너그럽고 흔들림 없는 두터운 평야의 신뢰로운 기운입니다.",
+                vibe: "토성(Saturn)의 안정적인 수호 고리와 결합하여 인생의 튼튼한 뿌리를 다지는 무거운 수호력을 받습니다.",
+                career: "기복 없이 꾸준하게 한 자리를 지켜온 귀하의 성실함이 마침내 상사나 핵심 파트너들의 신망을 한몸에 얻게 만듭니다. 서둘러 결정을 내리지 말고 상황을 넓은 안목으로 바라보며 중재자의 역할을 도맡으십시오. 계약이나 문서운에서 아주 기분 좋은 서명이 기대되는 명식입니다.",
+                love: "마치 오래된 고목 밑에 피어난 잔잔한 들꽃 같은 안락하고 편안한 연애 정류장에 도착하는 운입니다. 화려하지 않아도 서로의 이야기를 경청하는 깊은 대화가 이어지고, 흙 냄새가 물씬 나는 도심 속 정원이나 정갈한 티 하우스에서 인연 주파수가 가장 단단하게 조율되는 기쁨이 있습니다.",
+                wealth: "토(土)는 만물을 길러내어 마침내 수확을 일궈내는 가장 비옥한 금전 창고의 원천적 토대를 의미합니다. 부동산, 예적금 등 눈에 단단히 보이는 고정형 자산으로 자금을 정렬하는 편이 가장 안전하며, 사소한 단기 주식 거래보다는 중장기 연 단위의 포트폴리오를 구성해야 큰 부를 축적합니다.",
+                relations: "귀하의 넓고 안락한 기운 덕에 고민을 털어놓고 의지하고 싶어 하는 지인들이 줄을 이어 방문하는 형국입니다. 감정의 쓰레기통 역할을 자처하기보다는 적당한 거리를 유지해 귀하의 평온한 흙을 오염시키지 않는 방어막을 치는 것이 장기적인 평화를 확보하는 열쇠입니다.",
+                health: "위장이나 소화 계통의 흐름이 불규칙해지며 복부 팽만감이나 나른함이 찾아올 수 있는 민감한 환절기 주기입니다. 식사 후 10분 정도는 제자리에서 서 있거나 평평한 평지를 가볍게 산책하는 습관을 들이고, 자극적이고 매운 야식을 완전히 배제하는 것이 우주 위장 평화를 지키는 길입니다."
+            },
+            "금(金)": {
+                summary: "차가운 바위산에서 단련된 단단한 보석 혹은 날카로운 명검처럼 예리하고 결단력 있는 투명한 기운입니다.",
+                vibe: "수성(Mercury)의 기민한 계산 각도와 금성(Venus)의 미적 감각이 융합되어 지적이고 정교한 주파수를 형성합니다.",
+                career: "수많은 정보 중에서 진짜 핵심을 발라내어 결단을 내리는 능력이 절정에 다다르는 황금 주기입니다. 질질 끌어오던 골칫덩어리 사안들을 과감하게 정리정돈하거나 구조조정을 단행할 때 우주의 박수를 받습니다. 날카롭지만 이성적인 귀하의 제안이 공감대를 크게 형성할 것입니다.",
+                love: "냉정한 외면 속에 감춰진 눈부신 보석 같은 반전 매력이 이성들을 무장 해제 시키는 최고의 기운입니다. 세련되면서도 클래식한 멋이 돋보이는 모던 바 혹은 통창으로 도시의 밤 불빛이 시원하게 보이는 탁 트인 야외 공간에서 귀하의 은빛 사랑 오라가 우아하게 폭발합니다.",
+                wealth: "지출에 있어서 냉혹한 검사처럼 불필요한 고정 지출을 정밀 검토하여 칼같이 정리해야 하는 다이어트 타이밍입니다. 구독 서비스 해지나 불필요한 친목 모임 회비 등을 싹둑 잘라내는 즉시 그 새어 나가는 자리에 새로운 순금의 금전운이 차곡차곡 유입되는 대길의 정렬입니다.",
+                relations: "냉철한 비판적 조언이 빛을 발하는 시기지만 때로는 귀하의 단호한 거절이 상대에게는 날카로운 비수로 꽂힐 수 있습니다. 조금 더 유연하고 둥글게 소통하려는 노력이 동반될 때, 귀하의 지적인 매력이 진심으로 이해받고 평생 함께할 충성스러운 귀인들로 우주 정렬이 강화됩니다.",
+                health: "폐나 호흡기 계통, 그리고 환절기성 기관지 건조가 기침을 야기하고 에너지를 미세하게 다운시킬 수 있는 국면입니다. 침실의 습도를 항상 55% 안팎으로 촉촉하게 유지해 주시고 따뜻한 흰색 성질의 도라지차나 꿀차를 곁에 두고 홀짝이는 사소한 습관이 치유 오라를 활성화합니다."
+            },
+            "수(水)": {
+                summary: "만물을 적시며 깊은 바다로 흘러드는 끝없는 지혜와 유연성을 안은 푸른 물결의 기운입니다.",
+                vibe: "해왕성(Neptune)의 몽환적 직관력과 사랑의 금성이 조화되어 영적인 영감과 공감 주파수가 극대화됩니다.",
+                career: "상대방의 숨은 의도나 대중의 니즈를 한 발 앞서 알아채는 신비로운 영감과 촉이 최고조에 달합니다. 사람들의 마음을 치유하거나 상담하는 일, 콘텐츠 창작이나 예술적 영감이 필요한 기획서 작성 등에서 우주의 독보적인 지원을 받으니 내면의 직관이 가리키는 방향을 전적으로 신뢰해 보세요.",
+                love: "스며들듯 서서히 녹아내려 하나가 되는 깊고 운명적인 인연법이 들어와 있습니다. 시끌벅적한 술자리보다는 잔잔한 물소리가 들리는 강변이나 비 내리는 오후 풍경이 아름답게 조망되는 안락한 카페에서 조용히 마주앉아 눈빛을 맞추는 순간, 우주적 로맨스 주파수가 완벽히 연결됩니다.",
+                wealth: "흐르는 물처럼 유동 자금의 융통이 무척 매끄러워지는 호재를 만났습니다. 다만, 물길이 트이면 순식간에 빠져나가기도 하니 투기성 코인이나 주식의 불확실한 소문에는 절대 지갑을 열지 마십시오. 바위 틈에 고이듯 안전자산으로 돈의 흐름을 꽁꽁 얼려놓는 방어가 가장 중요합니다.",
+                relations: "어떤 그릇에도 담기는 유연성 덕에 만나는 모든 이들을 편안하게 해주고 인기를 독차지하는 형상입니다. 그러나 다른 사람들의 우울이나 부정적 슬픔을 귀하의 물에 그대로 받아들이면 수질이 오염되어 자칫 우울감이 침습될 수 있으니 타인의 감정에 동화되지 않도록 중심을 잡아야 합니다.",
+                health: "신장이나 비뇨기, 자궁 계통의 호르몬 균형이 미세하게 흔들릴 수 있어 온 몸이 쉽게 붓거나 피로를 느낄 수 있습니다. 따뜻한 성질의 차를 자주 음용해 체온을 올리고 반신욕을 통하여 전신에 혈류를 원활히 순환시키는 것이 귀하의 맑은 물빛을 투명하게 유지하는 유일한 비법입니다."
+            }
+        };
+
         const fallbackDestinyDataset = {
             "saju_summary": "당신의 사주는 대지를 뜻하는 기토(己土)의 맑은 기운을 안고 태어나, 우주 중심의 온화하고 평화로운 마음가짐이 강한 명식입니다.",
             "zodiac_sign": "염소자리",
@@ -620,6 +697,8 @@
             initAmbientCanvas();
             document.getElementById("api-key-input").value = globalApiKey;
             
+            setupCustomComboboxes();
+
             // Handle touch drag configurations on canvas to avoid mobile layout scroll jumps
             const salpuriCanvas = document.getElementById("salpuri-canvas");
             salpuriCanvas.addEventListener('touchstart', function(e) {
@@ -631,6 +710,93 @@
 
             // Set up Ritual hold listeners
             initRitualButton();
+        }
+
+        function setupCustomComboboxes() {
+            const yearInput = document.getElementById("birth-year");
+            const yearDropdown = document.getElementById("year-dropdown");
+            const dayInput = document.getElementById("birth-day");
+            const dayDropdown = document.getElementById("day-dropdown");
+
+            // Generate years array (2026 down to 1940)
+            const years = [];
+            for (let y = 2026; y >= 1940; y--) years.push(y);
+
+            // Generate days array (1 to 31)
+            const days = [];
+            for (let d = 1; d <= 31; d++) days.push(d);
+
+            // Dynamic Option Renderer
+            function renderOptions(dropdown, items, inputEl, suffix = "") {
+                dropdown.innerHTML = "";
+                if (items.length === 0) {
+                    const empty = document.createElement("div");
+                    empty.className = "px-3 py-2.5 text-[11px] text-gray-400 text-center";
+                    empty.innerText = "검색 결과 없음";
+                    dropdown.appendChild(empty);
+                    return;
+                }
+
+                items.forEach(item => {
+                    const option = document.createElement("div");
+                    option.className = "px-3 py-2.5 text-xs text-purple-950 hover:bg-purple-100/70 active:bg-purple-200 cursor-pointer text-center font-semibold transition-colors";
+                    option.innerText = `${item}${suffix}`;
+                    
+                    // Use mousedown instead of click to prevent input blur before selecting
+                    option.addEventListener("mousedown", (e) => {
+                        e.preventDefault();
+                        const isDay = inputEl.id === "birth-day";
+                        inputEl.value = isDay ? String(item).padStart(2, '0') : String(item);
+                        dropdown.classList.add("hidden");
+                        inputEl.blur();
+                    });
+                    
+                    dropdown.appendChild(option);
+                });
+            }
+
+            // Wire up actions for Combobox
+            function bindComboboxEvents(inputEl, dropdownEl, listData, suffix) {
+                // Focus & Click handlers
+                const showDropdown = () => {
+                    // Close other dropdowns first
+                    document.getElementById("year-dropdown").classList.add("hidden");
+                    document.getElementById("day-dropdown").classList.add("hidden");
+                    
+                    dropdownEl.classList.remove("hidden");
+                    filterList();
+                };
+
+                inputEl.addEventListener("focus", showDropdown);
+                inputEl.addEventListener("click", showDropdown);
+
+                // Input filtering
+                inputEl.addEventListener("input", filterList);
+
+                // Close dropdown on blur with safety timeout for option selection
+                inputEl.addEventListener("blur", () => {
+                    setTimeout(() => {
+                        dropdownEl.classList.add("hidden");
+                    }, 180);
+                });
+
+                function filterList() {
+                    const rawVal = inputEl.value.replace(/[^0-9]/g, "");
+                    if (rawVal === "") {
+                        renderOptions(dropdownEl, listData, inputEl, suffix);
+                    } else {
+                        const filtered = listData.filter(item => String(item).includes(rawVal));
+                        renderOptions(dropdownEl, filtered, inputEl, suffix);
+                    }
+                }
+
+                // Initialize standard list
+                renderOptions(dropdownEl, listData, inputEl, suffix);
+            }
+
+            // Bind the functions to respective elements
+            bindComboboxEvents(yearInput, yearDropdown, years, "년");
+            bindComboboxEvents(dayInput, dayDropdown, days, "일");
         }
 
         // Ambient Falling Stars Canvas Effect
@@ -728,7 +894,6 @@
         // =======================================================
         function calculateManseok(year, month, day, sajuHour) {
             // 1. Year Pillar (연주)
-            // 명리학 기준 연주는 절기상 입춘(대략 양력 2월 4일경)을 기준으로 변경되지만, 단순 계산 Epoch를 위해 기준 수립
             let adjustedYear = year;
             // 만약 1월이거나 2월 초순(입춘 전)이라면 직전 해의 기운을 받음
             if (month === 1 || (month === 2 && day < 4)) {
@@ -741,7 +906,6 @@
             const yearBranch = earthlyBranches[yearBranchIdx < 0 ? yearBranchIdx + 12 : yearBranchIdx];
 
             // 2. Month Pillar (월주)
-            // 월주 또한 절기 분기점(입춘, 경칩 등 약 4~8일)을 기준으로 바뀜
             let sajuMonth = month;
             if (day < 6) { // 대략 매월 5~6일 전이면 전월 기운 적용
                 sajuMonth = month - 1;
@@ -749,9 +913,8 @@
             }
 
             // 월간 구하기 (년천간에 따름)
-            // 甲己 년 -> 丙寅월 시작 / 乙庚 년 -> 戊寅월 시작 / 丙辛 년 -> 庚寅월 시작 / 丁壬 년 -> 壬寅월 시작 / 戊癸 년 -> 甲寅월 시작
             const yearStemHanja = yearStem.hanja;
-            let startMonthStemIdx = 0; // 0: 갑, 1: 을 ...
+            let startMonthStemIdx = 0; 
             if (yearStemHanja === "甲" || yearStemHanja === "己") startMonthStemIdx = 2; // 병화
             else if (yearStemHanja === "乙" || yearStemHanja === "庚") startMonthStemIdx = 4; // 무토
             else if (yearStemHanja === "丙" || yearStemHanja === "辛") startMonthStemIdx = 6; // 경금
@@ -779,8 +942,6 @@
             const dayBranch = earthlyBranches[dayBranchIdx];
 
             // 4. Hour Pillar (시주) - 시두법 (時頭法) 적용
-            // 자시(子時)의 천간은 일진의 천간에 의해 결정됨
-            // 일간이 甲, 己 -> 甲子시로 시작 / 乙, 庚 -> 丙子 / 丙, 辛 -> 戊子 / 丁, 壬 -> 庚子 / 戊, 癸 -> 壬子
             const dayStemHanja = dayStem.hanja;
             let startHourStemIdx = 0;
             if (dayStemHanja === "甲" || dayStemHanja === "己") startHourStemIdx = 0; // 갑목
@@ -813,6 +974,8 @@
         // Destiny Analysis Start
         async function startAnalysis() {
             const userName = document.getElementById("user-name").value.trim() || "여행자";
+            
+            // Handle Year & Day values directly from our upgraded comboboxes
             const birthYear = parseInt(document.getElementById("birth-year").value.trim());
             const birthMonth = parseInt(document.getElementById("birth-month").value);
             const birthDay = parseInt(document.getElementById("birth-day").value.trim());
@@ -858,7 +1021,7 @@
                 currentDestinyData = await fetchCosmicDestiny(userName, formattedDateString, sajuHour, selectedGender, selectedCalendar, manseokResult);
             } catch (err) {
                 console.error("Gemini API Error, utilizing mystical local engine instead:", err);
-                currentDestinyData = generateIntelligentFallback(userName, formattedDateString, sajuHour, selectedGender);
+                currentDestinyData = generateIntelligentFallback(userName, formattedDateString, sajuHour, selectedGender, manseokResult);
             }
 
             // End loading screen
@@ -874,6 +1037,7 @@
         // Fetch Dynamic content from Gemini Model with structured Manseok data
         async function fetchCosmicDestiny(name, date, time, gender, calendar, manseok) {
             const sajuFormatted = `연주: ${manseok.year.stem.hanja}${manseok.year.branch.hanja} (${manseok.year.stem.hangul}${manseok.year.branch.hangul}), 월주: ${manseok.month.stem.hanja}${manseok.month.branch.hanja}, 일주: ${manseok.day.stem.hanja}${manseok.day.branch.hanja}, 시주: ${manseok.hour.stem.hanja}${manseok.hour.branch.hanja}`;
+            const primaryElement = manseok.day.stem.element; // 일간 오행
 
             const systemPrompt = `당신은 사주 명리학 만세력과 서양 점성술을 아기자기하게 조화시킨 최고의 '우주 운명 치유소 소장'입니다.
 귀여운 문체와 따뜻한 주파수 위로를 건네주세요.
@@ -881,10 +1045,11 @@
 
             const userQuery = `${name}(${gender})님은 ${calendar} ${date} 사주시 [${time}시]에 태어났습니다.
 JS 연산 결과 산출된 전통 만세력 명식은 다음과 같습니다: [${sajuFormatted}].
+이 사람의 일주 천간 오행 기운은 [${primaryElement}]입니다.
 이 정보를 기반으로:
-1. 사주 오행 기운에 기초한 대략적인 종합 해설(saju_summary, 한줄의 시적이면서 귀여운 명리 묘사).
+1. 사주 오행 기운에 기초한 대략적인 종합 해설(saju_summary, 일주 오행인 [${primaryElement}]의 고유한 성질을 깊이 반영하여 시적이면서 귀여운 명리 묘사).
 2. 양력 기준의 별자리 명칭(zodiac_sign)과 오늘날 우주 성좌 정렬에 의한 기운(cosmic_vibe, 목성이나 금성 등의 기운 언급 필수).
-3. career(직업운), love(사랑운), wealth(재물운), relations(인간관계운), health(건강운) 다섯 가지 걱정거리나 미래 흐름을 부드럽고 아주 상세하게(각각 공백포함 최소 150자 이상 풍부하게) 설명해줄 것.
+3. career(직업운), love(사랑운), wealth(재물운), relations(인간관계운), health(건강운) 다섯 가지 걱정거리나 미래 흐름을 반드시 최소 3~4문장 이상(각 문항당 최소 200글자 이상 매우 상세하고 가득하게) 설명해줄 것.
 4. 오늘 하루 소장하고 활용하면 기운이 트이는 color_name(행운의 색깔 이름), color_hex(행운의 색 hex 코드값 예: #FFE4E6), number(행운의 숫자 1개), direction(행운의 방위 예: '동남쪽').
 5. 그를 위한 한 줄의 마음 힐링 확언(manifesting_quote).
 6. 그가 지우고 가야 할 탁한 살(煞)의 종류 4가지(sal_list: 각 'name'은 한국 명리학 한글 명칭과 'desc'는 그에 대한 유머러스하고 공감 가득한 설명 포함할 것).`;
@@ -961,8 +1126,8 @@ JS 연산 결과 산출된 전통 만세력 명식은 다음과 같습니다: [$
             return JSON.parse(jsonText);
         }
 
-        // Fallback Algorithm to secure a polished responsive offline mode
-        function generateIntelligentFallback(name, date, time, gender) {
+        // Fallback Algorithm to secure a polished responsive offline mode (Highly Customized based on actual Saju Element)
+        function generateIntelligentFallback(name, date, time, gender, manseok) {
             // Determine Zodiac Signs
             const birthMonth = parseInt(date.split("-")[1]);
             const birthDay = parseInt(date.split("-")[2]);
@@ -980,9 +1145,36 @@ JS 연산 결과 산출된 전통 만세력 명식은 다음과 같습니다: [$
             else if ((birthMonth == 11 && birthDay >= 22) || (birthMonth == 12 && birthDay <= 21)) zodiac = "사수자리";
             else zodiac = "염소자리";
 
-            const output = JSON.parse(JSON.stringify(fallbackDestinyDataset));
-            output.zodiac_sign = zodiac;
-            output.saju_summary = `부드러운 물줄기의 순환을 타고난 명식으로, ${name}님을 지지하는 귀인들의 시선이 언제나 당신을 따스하게 감싸고 있습니다.`;
+            // Extract Day Stem Element
+            const element = manseok.day.stem.element; // e.g., "토(土)" or "목(木)"
+            const preset = sajuElementPresets[element] || sajuElementPresets["토(土)"];
+
+            const output = {
+                saju_summary: `${name}님의 명식은 만세력 분석 결과 ${preset.summary}`,
+                zodiac_sign: zodiac,
+                cosmic_vibe: preset.vibe,
+                destiny: {
+                    career: preset.career,
+                    love: preset.love,
+                    wealth: preset.wealth,
+                    relations: preset.relations,
+                    health: preset.health
+                },
+                luck: {
+                    color_name: element === "목(木)" ? "파릇파릇 새싹 그린" : element === "화(火)" ? "황홀한 코랄 오렌지" : element === "토(土)" ? "안락한 모래 빛 샌드" : element === "금(金)" ? "빛나는 백은 실버" : "심해의 미스틱 마린블루",
+                    color_hex: element === "목(木)" ? "#86EFAC" : element === "화(火)" ? "#FDBA74" : element === "토(土)" ? "#FEF08A" : element === "금(金)" ? "#E2E8F0" : "#93C5FD",
+                    number: String(Math.floor(Math.random() * 9) + 1),
+                    direction: element === "목(木)" ? "동쪽 (생기가 돋는 싱그러운 방향)" : element === "화(火)" ? "남쪽 (열정이 번지는 방위)" : element === "토(土)" ? "중앙 혹은 서남쪽 (안정이 도래하는 방위)" : element === "금(金)" ? "서쪽 (기운을 단련하기 유익한 방위)" : "북쪽 (지혜를 숙성시키는 지혜로운 방향)"
+                },
+                manifesting_quote: "온 우주는 당신이 한 걸음 내딛을 때 그 주파수를 정밀하게 정렬하여 활짝 길을 열어줄 준비가 되어 있습니다.",
+                sal_list: [
+                    {"name": element === "목(木)" ? "고집불통살" : element === "화(火)" ? "벌컥분노살" : element === "토(土)" ? "정체미룸살" : element === "금(金)" ? "날카로움살" : "우울잡념살", "desc": "내 기운이 너무 뭉쳐 다른 사람과의 소통에 미세한 벽을 쌓고 일을 지연시키게 만드는 불필요한 고비의 파동입니다."},
+                    {"name": "인간걱정살", "desc": "남들에게 상처받거나 미움을 사지 않을까 혼자 조마조마해 하는 흐름입니다."},
+                    {"name": "지출재물살", "desc": "주변에 쓸데없는 간식을 사거나 무심코 예쁜 쓰레기를 결제하여 주머니를 비우는 기운입니다."},
+                    {"name": "피로탈진살", "desc": "몸의 오라 주파수가 소모되어 밤 10시만 되면 만사가 만사 귀찮아지는 나른함의 정체 상태입니다."}
+                ]
+            };
+
             return output;
         }
 
@@ -1028,7 +1220,7 @@ JS 연산 결과 산출된 전통 만세력 명식은 다음과 같습니다: [$
                         <span class="w-9 h-9 rounded-full bg-white flex items-center justify-center ${item.iconColor} flex-shrink-0 shadow-sm text-sm">
                             <i class="${item.icon}"></i>
                         </span>
-                        <div>
+                        <div class="flex-grow">
                             <h4 class="font-bold text-neutral-800 text-xs">${item.title}</h4>
                             <p class="text-xs text-neutral-600 mt-1.5 leading-relaxed text-justify">${textContent}</p>
                         </div>
@@ -1079,13 +1271,13 @@ JS 연산 결과 산출된 전통 만세력 명식은 다음과 같습니다: [$
                             <p class="text-xs text-neutral-500 mt-0.5">답답할 때 이쪽 방면 하늘을 보고 심호흡 하세요</p>
                         </div>
                     </div>
-                    <span class="text-xs font-bold text-neutral-800 bg-cyan-100/50 py-1 px-3 rounded-full">${currentDestinyData.luck.direction}</span>
+                    <span class="text-xs font-bold text-neutral-800 bg-cyan-100/50 py-1 px-3 rounded-full text-center">${currentDestinyData.luck.direction}</span>
                 </div>
             `;
 
             // Render Tab 3 Warnings
-            document.getElementById("worry-sal-desc").innerText = `${name}님의 기류를 정밀 분석한 결과, 근원적으로 차단해야 할 탁기(煞)는 바로 [${currentDestinyData.sal_list[0]?.name || '정체살'}]과 [${currentDestinyData.sal_list[1]?.name || '잡념살'}]입니다.`;
-            document.getElementById("worry-mind-desc").innerText = `${currentDestinyData.manifesting_quote} 우주와 당신의 에너지가 올바른 전도율을 갖기 위해선 사소한 감정의 굴레에서 벗어나는 것이 우선이며, 이를 위해 마련된 아래의 의식이나 살풀이를 꼭 실행하세요!`;
+            document.getElementById("worry-sal-desc").innerText = `${name}님의 명식을 정밀 분석한 결과, 근원적으로 소멸시켜야 할 탁한 살은 바로 [${currentDestinyData.sal_list[0]?.name || '정체살'}]과 [${currentDestinyData.sal_list[1]?.name || '잡념살'}]입니다. ${currentDestinyData.sal_list[0]?.desc || ''} 이 액운들은 당신의 전진에 보이지 않는 피로를 야기할 수 있습니다.`;
+            document.getElementById("worry-mind-desc").innerText = `${currentDestinyData.manifesting_quote} 우주와 당신의 에너지가 매끄러운 전도율을 갖기 위해선 사소한 오해나 생각의 꼬리에서 신속히 탈출해야 하며, 이를 방지하기 위해 오늘만큼은 듣는 것에 무게를 더 싣기를 조언합니다.`;
 
             // Initialize Salpuri Game setup
             initSalpuriGame();
@@ -1447,7 +1639,6 @@ JS 연산 결과 산출된 전통 만세력 명식은 다음과 같습니다: [$
             document.getElementById("manifest-step-3").classList.add("flex");
         }
 
-        // Copy / download mechanism
         function downloadTalisman() {
             const textToCopy = `[우주빛 명리소 수호 부적]\n\n소망: ${document.getElementById("talisman-wish-display").innerText}\n\n우주의 기운이 당신의 길을 밝힙니다. 이 운세를 지장하듯 복사하여 보관해보세요!`;
             
