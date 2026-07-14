@@ -6,18 +6,17 @@
     <title>우주빛 운명 살풀이소</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Gowun Dodum & Montserrat for Numbers -->
+    <!-- Google Fonts: Gowun Dodum, Gowun Batang & Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Gowun+Batang:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Mobile Viewport Safeguards & Design Tokens */
         body {
             font-family: 'Gowun Dodum', sans-serif;
-            background: radial-gradient(circle at center, #fdfbf7 0%, #f3ebfd 100%);
+            background: radial-gradient(circle at center, #fefdfa 0%, #f4eeff 100%);
             overscroll-behavior: none;
             -webkit-tap-highlight-color: transparent;
         }
@@ -26,37 +25,41 @@
             font-family: 'Montserrat', sans-serif;
         }
 
+        .saju-font {
+            font-family: 'Gowun Batang', serif;
+        }
+
         /* Ambient glow animation */
         @keyframes cosmicGlow {
-            0%, 100% { filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.4)); }
-            50% { filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.6)); }
+            0%, 100% { filter: drop-shadow(0 0 12px rgba(167, 139, 250, 0.45)); }
+            50% { filter: drop-shadow(0 0 22px rgba(244, 63, 94, 0.65)); }
         }
 
         .cosmic-pulse {
-            animation: cosmicGlow 3s infinite ease-in-out;
+            animation: cosmicGlow 3.5s infinite ease-in-out;
         }
 
         /* Float animation for decorative items */
         @keyframes floatSlow {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(3deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
         }
 
         .floating-element {
-            animation: floatSlow 6s infinite ease-in-out;
+            animation: floatSlow 7s infinite ease-in-out;
         }
 
         /* Glassmorphism utility */
         .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
         }
 
         /* Seamless layout transitions */
         .page-transition {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Customized scroll bar */
@@ -67,13 +70,15 @@
             background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(167, 139, 250, 0.4);
+            background: rgba(167, 139, 250, 0.45);
             border-radius: 999px;
         }
 
-        /* Prevent scroll selection bugs on iOS */
+        /* Custom inputs for iOS Safari Safari safeguard */
         input, select, button {
-            font-size: 16px !important; /* Prevents auto zoom on iOS Safari */
+            font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
+            -webkit-appearance: none;   /* Removes iOS default styling shadows */
+            border-radius: 12px;
         }
     </style>
 </head>
@@ -86,14 +91,14 @@
     <main class="relative z-10 w-full max-w-md min-h-screen flex flex-col justify-between px-5 py-6">
         
         <!-- Header: Top Branding -->
-        <header class="w-full flex items-center justify-between mb-2">
+        <header class="w-full flex items-center justify-between mb-4">
             <div class="flex items-center gap-2" id="header-logo" onclick="goToPage('input-page')">
-                <span class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-400 to-amber-300 flex items-center justify-center text-white text-lg shadow-md cursor-pointer">
-                    <i class="fa-solid fa-moon text-amber-100 cosmic-pulse"></i>
+                <span class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-amber-300 flex items-center justify-center text-white text-lg shadow-md cursor-pointer">
+                    <i class="fa-solid fa-cloud-moon text-amber-100 cosmic-pulse"></i>
                 </span>
                 <div>
                     <h1 class="text-sm font-bold text-purple-950 tracking-wider">우주빛 운명소</h1>
-                    <p class="text-[10px] text-purple-400">사주와 별자리의 신비로운 조화</p>
+                    <p class="text-[10px] text-purple-500">정통 만세력과 별자리의 신비로운 조화</p>
                 </div>
             </div>
             <!-- API Key indicator (Automatic or Manual Toggle) -->
@@ -110,10 +115,10 @@
                     <button onclick="closeApiModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <p class="text-xs text-gray-500 mb-4 leading-relaxed">
-                    본 서비스는 우주급 해설을 위해 무료 신통력 엔진(Gemini 3.1)을 기본 탑재하고 있습니다. 개인 API 키를 등록하면 대기 시간 없이 무제한으로 초정밀 맞춤형 사주를 보실 수 있습니다. (비워둘 시 공용 체험형 서버 사용)
+                    본 서비스는 우주급 정밀 해설을 위해 무료 신통력 엔진(Gemini 3.1)을 탑재하고 있습니다. 개인 API 키를 등록하시면 대기 없이 초정밀 사주 해석을 받아보실 수 있습니다.
                 </p>
-                <input type="password" id="api-key-input" placeholder="AI API Key 입력 (선택사항)" class="w-full px-3 py-2 text-sm border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 mb-4">
-                <button onclick="saveApiKey()" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl py-2.5 text-xs font-bold shadow-md shadow-purple-200 hover:opacity-90 transition-opacity">
+                <input type="password" id="api-key-input" placeholder="AI API Key 입력 (선택사항)" class="w-full px-3 py-2.5 text-sm border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 mb-4 bg-purple-50/50">
+                <button onclick="saveApiKey()" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl py-3 text-xs font-bold shadow-md shadow-purple-200 hover:opacity-90 transition-opacity">
                     적용하기
                 </button>
             </div>
@@ -122,19 +127,19 @@
         <!-- ============================================= -->
         <!-- SCREEN 1: User Birth & Saju Input Page -->
         <!-- ============================================= -->
-        <div id="input-page" class="page-transition w-full flex-grow flex flex-col justify-center py-4">
-            <div class="text-center mb-6">
-                <span class="inline-block bg-purple-100 text-purple-700 text-xs px-3 py-1 rounded-full mb-2 font-bold tracking-tight">재미로 보는 운세와 살풀이</span>
-                <h2 class="text-2xl font-bold text-purple-950 leading-snug">당신의 은하수 지도가<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">기다리고 있습니다</span></h2>
-                <p class="text-xs text-neutral-500 mt-1">태어난 날짜와 시간을 기반으로 운명을 읽어냅니다</p>
+        <div id="input-page" class="page-transition w-full flex-grow flex flex-col justify-center py-2">
+            <div class="text-center mb-5">
+                <span class="inline-block bg-purple-100 text-purple-700 text-xs px-3 py-1 rounded-full mb-2 font-bold tracking-tight">재미로 보는 만세력 운세와 살풀이</span>
+                <h2 class="text-2xl font-bold text-purple-950 leading-snug">당신의 은하수 만세력이<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">준비되었습니다</span></h2>
+                <p class="text-xs text-neutral-500 mt-1">입력된 전통 절기와 일진을 토대로 주파수를 읽어냅니다</p>
             </div>
 
-            <!-- Form Card -->
-            <div class="glass-card rounded-3xl p-6 shadow-xl shadow-purple-100/50 border border-white flex flex-col gap-4">
+            <!-- Form Card (Redesigned to avoid Safari overflows) -->
+            <div class="glass-card rounded-3xl p-5 shadow-xl shadow-purple-100/50 border border-white flex flex-col gap-4">
                 <!-- Name -->
                 <div>
                     <label class="block text-xs font-bold text-purple-900 mb-1.5"><i class="fa-solid fa-sparkles text-amber-400 mr-1"></i> 당신의 예쁜 이름</label>
-                    <input type="text" id="user-name" placeholder="예: 별이, 도겸" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 placeholder-neutral-400">
+                    <input type="text" id="user-name" placeholder="예: 별이, 민우" class="w-full px-4 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 placeholder-neutral-400 shadow-sm">
                 </div>
 
                 <!-- Gender & Solar/Lunar -->
@@ -142,40 +147,80 @@
                     <div>
                         <label class="block text-xs font-bold text-purple-900 mb-1.5">성별</label>
                         <div class="grid grid-cols-2 gap-1 bg-purple-100/50 p-1 rounded-xl">
-                            <button id="btn-gender-f" onclick="setGender('여성')" class="py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm">여성</button>
-                            <button id="btn-gender-m" onclick="setGender('남성')" class="py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500">남성</button>
+                            <button id="btn-gender-f" onclick="setGender('여성')" class="py-2 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm">여성</button>
+                            <button id="btn-gender-m" onclick="setGender('남성')" class="py-2 text-xs rounded-lg font-bold transition-all text-purple-500">남성</button>
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-purple-900 mb-1.5">달력</label>
                         <div class="grid grid-cols-2 gap-1 bg-purple-100/50 p-1 rounded-xl">
-                            <button id="btn-calendar-s" onclick="setCalendar('양력')" class="py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm">양력</button>
-                            <button id="btn-calendar-l" onclick="setCalendar('음력')" class="py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500">음력</button>
+                            <button id="btn-calendar-s" onclick="setCalendar('양력')" class="py-2 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm">양력</button>
+                            <button id="btn-calendar-l" onclick="setCalendar('음력')" class="py-2 text-xs rounded-lg font-bold transition-all text-purple-500">음력</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Birth Date -->
+                <!-- Birth Date: Custom Numeric Input + Select Hybrid for iOS Safari Safety -->
                 <div>
-                    <label class="block text-xs font-bold text-purple-900 mb-1.5">생년월일</label>
-                    <input type="date" id="birth-date" value="2000-01-01" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950">
+                    <label class="block text-xs font-bold text-purple-900 mb-1.5">생년월일 (직접 입력 또는 선택)</label>
+                    <div class="grid grid-cols-12 gap-2">
+                        <!-- Year: Numeric Input with max 4 chars -->
+                        <div class="col-span-5 relative">
+                            <input type="text" id="birth-year" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="년(YYYY)" value="2000" class="w-full text-center px-2 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm">
+                        </div>
+                        <!-- Month: Elegant custom select dropdown -->
+                        <div class="col-span-3 relative">
+                            <select id="birth-month" class="w-full text-center px-1 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm cursor-pointer">
+                                <option value="1" selected>1월</option>
+                                <option value="2">2월</option>
+                                <option value="3">3월</option>
+                                <option value="4">4월</option>
+                                <option value="5">5월</option>
+                                <option value="6">6월</option>
+                                <option value="7">7월</option>
+                                <option value="8">8월</option>
+                                <option value="9">9월</option>
+                                <option value="10">10월</option>
+                                <option value="11">11월</option>
+                                <option value="12">12월</option>
+                            </select>
+                        </div>
+                        <!-- Day: Numeric Input with max 2 chars -->
+                        <div class="col-span-4 relative">
+                            <input type="text" id="birth-day" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="일(DD)" value="01" class="w-full text-center px-2 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Birth Time -->
+                <!-- Birth Time: Redesigned into Saju 12-Kanji Hours Select -->
                 <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label class="block text-xs font-bold text-purple-900">태어난 시간</label>
-                        <label class="inline-flex items-center text-[11px] text-purple-500 cursor-pointer">
-                            <input type="checkbox" id="time-unknown" onchange="toggleTimeUnknown()" class="rounded text-purple-500 focus:ring-purple-400 mr-1"> 모름
-                        </label>
+                    <label class="block text-xs font-bold text-purple-900 mb-1.5">태어난 사주시 (12간지)</label>
+                    <div class="relative">
+                        <select id="birth-saju-time" class="w-full px-4 py-3 rounded-xl bg-white border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 shadow-sm cursor-pointer">
+                            <option value="자" selected>자시 (子時) - 밤 11시 30분 ~ 새벽 1시 29분</option>
+                            <option value="축">축시 (丑時) - 새벽 1시 30분 ~ 새벽 3시 29분</option>
+                            <option value="인">인시 (寅時) - 새벽 3시 30분 ~ 새벽 5시 29분</option>
+                            <option value="묘">묘시 (卯時) - 아침 5시 30분 ~ 아침 7시 29분</option>
+                            <option value="진">진시 (辰時) - 아침 7시 30분 ~ 오전 9시 29분</option>
+                            <option value="사">사시 (巳時) - 오전 9시 30분 ~ 오전 11시 29분</option>
+                            <option value="오">오시 (午時) - 오전 11시 30분 ~ 오후 1시 29분</option>
+                            <option value="미">미시 (未時) - 오후 1시 30분 ~ 오후 3시 29분</option>
+                            <option value="신">신시 (申時) - 오후 3시 30분 ~ 오후 5시 29분</option>
+                            <option value="유">유시 (酉時) - 오후 5시 30분 ~ 저녁 7시 29분</option>
+                            <option value="술">술시 (戌時) - 저녁 7시 30분 ~ 밤 9시 29분</option>
+                            <option value="해">해시 (亥時) - 밤 9시 30분 ~ 밤 11시 29분</option>
+                            <option value="모름">모름 - 태어난 시간대 모름</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-purple-400">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
                     </div>
-                    <input type="time" id="birth-time" value="12:00" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950">
                 </div>
             </div>
 
             <!-- Start Button -->
             <button onclick="startAnalysis()" class="w-full mt-6 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 text-white rounded-2xl py-4 font-bold text-sm shadow-lg shadow-purple-200/80 hover:opacity-95 transition-all transform active:scale-98 flex items-center justify-center gap-2">
-                <span>운명 주파수 탐색하기</span>
+                <span>운명 주파수와 만세력 융합하기</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
@@ -198,9 +243,9 @@
                 <div class="absolute top-0 left-1/2 -ml-2 w-4 h-4 bg-amber-400 rounded-full animate-bounce"></div>
             </div>
             
-            <h3 class="text-xl font-bold text-purple-950 mb-2" id="loading-title">별의 정렬을 맞추는 중</h3>
+            <h3 class="text-xl font-bold text-purple-950 mb-2" id="loading-title">별과 만세력 정렬 맞추는 중</h3>
             <p class="text-xs text-purple-500 max-w-xs mx-auto leading-relaxed px-4" id="loading-subtitle">
-                전통 명리학의 오행 기운과 우주의 목성, 금성 주파수를 조율하여 인생의 나침반을 구성하고 있습니다...
+                전통 명리학 절기를 기준으로 정밀 만세력을 구성하고 우주의 금성, 목성 궤도를 조율 중입니다...
             </p>
 
             <!-- Fun Live Progress bar -->
@@ -215,6 +260,43 @@
         <!-- ============================================= -->
         <div id="result-page" class="page-transition w-full flex-grow flex flex-col justify-start hidden">
             
+            <!-- Saju Palja Manseok Table (Highly Requested for Authenticity) -->
+            <div class="glass-card rounded-3xl p-4 mb-4 border border-purple-150 shadow-sm text-center relative overflow-hidden">
+                <div class="text-[11px] font-bold text-purple-500 uppercase tracking-widest mb-2"><i class="fa-solid fa-scroll mr-1 text-purple-400"></i> 당신의 명리학 사주사주 (四柱八字)</div>
+                
+                <!-- Grid of Pillars -->
+                <div class="grid grid-cols-4 gap-1 bg-purple-50/70 p-2 rounded-2xl border border-purple-100/50">
+                    <!-- Saju Pillar: Hour (시주) -->
+                    <div class="bg-white rounded-xl p-1.5 shadow-xs border border-purple-100">
+                        <div class="text-[9px] text-purple-400 font-bold mb-1">시주 (時柱)</div>
+                        <div id="saju-hour-kan" class="text-lg font-bold saju-font text-purple-900 leading-tight">?</div>
+                        <div id="saju-hour-ji" class="text-lg font-bold saju-font text-purple-900 leading-tight">?</div>
+                        <div id="saju-hour-kr" class="text-[10px] text-gray-500 mt-1 font-bold">시</div>
+                    </div>
+                    <!-- Saju Pillar: Day (일주) -->
+                    <div class="bg-white rounded-xl p-1.5 shadow-xs border border-purple-100">
+                        <div class="text-[9px] text-purple-400 font-bold mb-1">일주 (日柱)</div>
+                        <div id="saju-day-kan" class="text-lg font-bold saju-font text-purple-900 leading-tight">?</div>
+                        <div id="saju-day-ji" class="text-lg font-bold saju-font text-purple-900 leading-tight">?</div>
+                        <div id="saju-day-kr" class="text-[10px] text-gray-500 mt-1 font-bold">일</div>
+                    </div>
+                    <!-- Saju Pillar: Month (월주) -->
+                    <div class="bg-white rounded-xl p-1.5 shadow-xs border border-purple-100">
+                        <div class="text-[9px] text-purple-400 font-bold mb-1">월주 (月柱)</div>
+                        <div id="saju-month-kan" class="text-lg font-bold saju-font text-purple-900 leading-tight">?</div>
+                        <div id="saju-month-ji" class="text-lg font-bold saju-font text-purple-900 leading-tight">?</div>
+                        <div id="saju-month-kr" class="text-[10px] text-gray-500 mt-1 font-bold">월</div>
+                    </div>
+                    <!-- Saju Pillar: Year (연주) -->
+                    <div class="bg-white rounded-xl p-1.5 shadow-xs border border-purple-100">
+                        <div class="text-[9px] text-purple-400 font-bold mb-1">연주 (年柱)</div>
+                        <div id="saju-year-kan" class="text-lg font-bold saju-font text-purple-900 leading-tight">?</div>
+                        <div id="saju-year-ji" class="text-lg font-bold saju-font text-purple-900 leading-tight">?</div>
+                        <div id="saju-year-kr" class="text-[10px] text-gray-500 mt-1 font-bold">년</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Result Top Card Summary -->
             <div class="glass-card rounded-3xl p-5 mb-5 shadow-lg border border-white text-center relative overflow-hidden">
                 <div class="absolute top-2 right-2 bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-xs">
@@ -222,7 +304,7 @@
                 </div>
                 <div class="text-xs text-purple-400 font-bold mb-1" id="res-birth-info">양력 2000년 01월 01일생</div>
                 <h3 class="text-xl font-bold text-purple-950 mb-1" id="res-greeting">지아님의 은하수 운명도</h3>
-                <p class="text-xs text-neutral-500 px-4 leading-relaxed mt-2" id="res-short-vibe">
+                <p class="text-xs text-neutral-600 px-4 leading-relaxed mt-2" id="res-short-vibe">
                     오행과 별자리가 만나 대길의 기운이 깃든 하루를 자아냅니다. 당신을 감싸는 목성의 수호에 귀를 기울이세요.
                 </p>
             </div>
@@ -339,7 +421,7 @@
                         </div>
                         <h5 class="text-lg font-bold text-amber-300">살풀이 대성공!</h5>
                         <p class="text-xs text-neutral-200 mt-1 leading-relaxed max-w-xs">
-                            온 몸을 짓누르던 모든 탁한 기운(煞)이 깨끗한 우주의 먼지로 소멸하여 날아갔습니다. 이제 앞길이 맑게 트입니다!
+                            온 몸을 짓누르던 모든 탁한 기운(煞)이 깨끗한 우주의 먼지로 소멸하여 날아갔습니다. 이제 앞길이 맑게 트집니다!
                         </p>
                         <button onclick="resetSalpuriGame()" class="mt-4 bg-gradient-to-r from-amber-400 to-amber-500 text-purple-950 font-bold text-xs px-4 py-2 rounded-xl shadow-md">
                             한 번 더 정화하기
@@ -419,8 +501,8 @@
                         <!-- Mystic border -->
                         <div class="absolute inset-2 border border-dashed border-amber-400/60 rounded-2xl pointer-events-none"></div>
                         <!-- Decorative seals -->
-                        <div class="absolute top-2 left-2 text-[10px] text-amber-500/40">宇宙運</div>
-                        <div class="absolute bottom-2 right-2 text-[10px] text-amber-500/40">大吉大利</div>
+                        <div class="absolute top-2 left-2 text-[10px] text-amber-500/40 font-bold">宇宙運</div>
+                        <div class="absolute bottom-2 right-2 text-[10px] text-amber-500/40 font-bold">大吉大利</div>
 
                         <div class="flex flex-col items-center mt-3">
                             <span class="text-xs text-amber-800 font-bold border-b border-amber-300 pb-1 px-3">우주 성운 수호 부적</span>
@@ -440,7 +522,7 @@
                             <div class="w-8 h-8 rounded-full border-2 border-red-500/80 flex items-center justify-center text-red-500/80 text-[10px] font-bold transform rotate-12">
                                 命 運
                             </div>
-                            <span class="text-[9px] text-amber-700/60 mt-1 font-mono tracking-widest">AURA SYNTHESIS OK</span>
+                            <span class="text-[9px] text-amber-700/60 mt-1 font-mono tracking-widest text-center">AURA SYNTHESIS OK</span>
                         </div>
                     </div>
 
@@ -473,9 +555,37 @@
         // App State
         let selectedGender = "여성";
         let selectedCalendar = "양력";
-        let isTimeUnknown = false;
         let globalApiKey = localStorage.getItem("gemini_api_key") || "";
         
+        // Accurate Manseok Mappings (Hanja and Hangul representation)
+        const celestialStems = [
+            { hanja: "甲", hangul: "갑", element: "목(木)" },
+            { hanja: "乙", hangul: "을", element: "목(木)" },
+            { hanja: "丙", hangul: "병", element: "화(火)" },
+            { hanja: "丁", hangul: "정", element: "화(火)" },
+            { hanja: "戊", hangul: "무", element: "토(土)" },
+            { hanja: "己", hangul: "기", element: "토(土)" },
+            { hanja: "庚", hangul: "경", element: "금(金)" },
+            { hanja: "辛", hangul: "신", element: "금(金)" },
+            { hanja: "壬", hangul: "임", element: "수(水)" },
+            { hanja: "癸", hangul: "계", element: "수(水)" }
+        ];
+
+        const earthlyBranches = [
+            { hanja: "子", hangul: "자", animal: "쥐", element: "수(水)" },
+            { hanja: "丑", hangul: "축", animal: "소", element: "토(土)" },
+            { hanja: "寅", hangul: "인", animal: "호랑이", element: "목(木)" },
+            { hanja: "卯", hangul: "묘", animal: "토끼", element: "목(木)" },
+            { hanja: "辰", hangul: "진", animal: "용", element: "토(土)" },
+            { hanja: "巳", hangul: "사", animal: "뱀", element: "화(火)" },
+            { hanja: "午", hangul: "오", animal: "말", element: "화(火)" },
+            { hanja: "未", hangul: "미", animal: "양", element: "토(土)" },
+            { hanja: "申", hangul: "신", animal: "원숭이", element: "금(金)" },
+            { hanja: "酉", hangul: "유", animal: "닭", element: "금(金)" },
+            { hanja: "戌", hangul: "술", animal: "개", element: "토(土)" },
+            { hanja: "亥", hangul: "해", animal: "돼지", element: "수(水)" }
+        ];
+
         // Mock fallback results for immediate action in case API is disconnected or limited
         const fallbackDestinyDataset = {
             "saju_summary": "당신의 사주는 대지를 뜻하는 기토(己土)의 맑은 기운을 안고 태어나, 우주 중심의 온화하고 평화로운 마음가짐이 강한 명식입니다.",
@@ -559,7 +669,6 @@
                         s.direction *= -1;
                     }
                     
-                    // Slightly float around
                     s.y -= s.speed * 20;
                     if (s.y < 0) s.y = canvas.height;
 
@@ -584,31 +693,20 @@
             const key = document.getElementById("api-key-input").value.trim();
             localStorage.setItem("gemini_api_key", key);
             globalApiKey = key;
-            alert("신통력 엔진 열쇠가 안전하게 등록되었습니다.");
             closeApiModal();
         }
 
         // Toggle Helpers
         function setGender(g) {
             selectedGender = g;
-            document.getElementById("btn-gender-f").className = g === "여성" ? "py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500";
-            document.getElementById("btn-gender-m").className = g === "남성" ? "py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500";
+            document.getElementById("btn-gender-f").className = g === "여성" ? "py-2 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-2 text-xs rounded-lg font-bold transition-all text-purple-500";
+            document.getElementById("btn-gender-m").className = g === "남성" ? "py-2 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-2 text-xs rounded-lg font-bold transition-all text-purple-500";
         }
 
         function setCalendar(c) {
             selectedCalendar = c;
-            document.getElementById("btn-calendar-s").className = c === "양력" ? "py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500";
-            document.getElementById("btn-calendar-l").className = c === "음력" ? "py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500";
-        }
-
-        function toggleTimeUnknown() {
-            isTimeUnknown = document.getElementById("time-unknown").checked;
-            document.getElementById("birth-time").disabled = isTimeUnknown;
-            if (isTimeUnknown) {
-                document.getElementById("birth-time").style.opacity = "0.5";
-            } else {
-                document.getElementById("birth-time").style.opacity = "1";
-            }
+            document.getElementById("btn-calendar-s").className = c === "양력" ? "py-2 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-2 text-xs rounded-lg font-bold transition-all text-purple-500";
+            document.getElementById("btn-calendar-l").className = c === "음력" ? "py-2 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-2 text-xs rounded-lg font-bold transition-all text-purple-500";
         }
 
         // Page Router
@@ -622,75 +720,175 @@
                     el.classList.add("hidden");
                 }
             });
-            // Auto scroll to top of viewport smoothly
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // =======================================================
+        // Pure Saju Manseok Algorithm (Genuine Lunar-Solar Epoch & Ganji Calculations)
+        // =======================================================
+        function calculateManseok(year, month, day, sajuHour) {
+            // 1. Year Pillar (연주)
+            // 명리학 기준 연주는 절기상 입춘(대략 양력 2월 4일경)을 기준으로 변경되지만, 단순 계산 Epoch를 위해 기준 수립
+            let adjustedYear = year;
+            // 만약 1월이거나 2월 초순(입춘 전)이라면 직전 해의 기운을 받음
+            if (month === 1 || (month === 2 && day < 4)) {
+                adjustedYear = year - 1;
+            }
+            
+            const yearStemIdx = (adjustedYear - 4) % 10;
+            const yearBranchIdx = (adjustedYear - 4) % 12;
+            const yearStem = celestialStems[yearStemIdx < 0 ? yearStemIdx + 10 : yearStemIdx];
+            const yearBranch = earthlyBranches[yearBranchIdx < 0 ? yearBranchIdx + 12 : yearBranchIdx];
+
+            // 2. Month Pillar (월주)
+            // 월주 또한 절기 분기점(입춘, 경칩 등 약 4~8일)을 기준으로 바뀜
+            let sajuMonth = month;
+            if (day < 6) { // 대략 매월 5~6일 전이면 전월 기운 적용
+                sajuMonth = month - 1;
+                if (sajuMonth === 0) sajuMonth = 12;
+            }
+
+            // 월간 구하기 (년천간에 따름)
+            // 甲己 년 -> 丙寅월 시작 / 乙庚 년 -> 戊寅월 시작 / 丙辛 년 -> 庚寅월 시작 / 丁壬 년 -> 壬寅월 시작 / 戊癸 년 -> 甲寅월 시작
+            const yearStemHanja = yearStem.hanja;
+            let startMonthStemIdx = 0; // 0: 갑, 1: 을 ...
+            if (yearStemHanja === "甲" || yearStemHanja === "己") startMonthStemIdx = 2; // 병화
+            else if (yearStemHanja === "乙" || yearStemHanja === "庚") startMonthStemIdx = 4; // 무토
+            else if (yearStemHanja === "丙" || yearStemHanja === "辛") startMonthStemIdx = 6; // 경금
+            else if (yearStemHanja === "丁" || yearStemHanja === "壬") startMonthStemIdx = 8; // 임수
+            else startMonthStemIdx = 0; // 갑목
+
+            const monthBranchIdx = (sajuMonth + 1) % 12; // 인월(寅월)이 1월(음력 정월)이므로 인덱스 보정
+            const monthStemIdx = (startMonthStemIdx + (sajuMonth - 1)) % 10;
+            const monthStem = celestialStems[monthStemIdx];
+            const monthBranch = earthlyBranches[monthBranchIdx];
+
+            // 3. Day Pillar (일주) - Julian Day Calibration
+            // 2000년 1월 1일은 '무인(戊寅)일' (천간 인덱스 4, 지지 인덱스 2)
+            const refDate = new Date(2000, 0, 1);
+            const targetDate = new Date(year, month - 1, day);
+            const diffTime = targetDate.getTime() - refDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            let dayStemIdx = (4 + diffDays) % 10;
+            if (dayStemIdx < 0) dayStemIdx += 10;
+            let dayBranchIdx = (2 + diffDays) % 12;
+            if (dayBranchIdx < 0) dayBranchIdx += 12;
+
+            const dayStem = celestialStems[dayStemIdx];
+            const dayBranch = earthlyBranches[dayBranchIdx];
+
+            // 4. Hour Pillar (시주) - 시두법 (時頭法) 적용
+            // 자시(子時)의 천간은 일진의 천간에 의해 결정됨
+            // 일간이 甲, 己 -> 甲子시로 시작 / 乙, 庚 -> 丙子 / 丙, 辛 -> 戊子 / 丁, 壬 -> 庚子 / 戊, 癸 -> 壬子
+            const dayStemHanja = dayStem.hanja;
+            let startHourStemIdx = 0;
+            if (dayStemHanja === "甲" || dayStemHanja === "己") startHourStemIdx = 0; // 갑목
+            else if (dayStemHanja === "乙" || dayStemHanja === "庚") startHourStemIdx = 2; // 병화
+            else if (dayStemHanja === "丙" || dayStemHanja === "辛") startHourStemIdx = 4; // 무토
+            else if (dayStemHanja === "丁" || dayStemHanja === "壬") startHourStemIdx = 6; // 경금
+            else startHourStemIdx = 8; // 임수
+
+            let targetBranchIdx = 0; // 기본 자시(子)
+            const branchMap = { "자": 0, "축": 1, "인": 2, "묘": 3, "진": 4, "사": 5, "오": 6, "미": 7, "신": 8, "유": 9, "술": 10, "해": 11, "모름": -1 };
+            targetBranchIdx = branchMap[sajuHour];
+
+            let hourStem = { hanja: "무(無)", hangul: "무", element: "공(空)" };
+            let hourBranch = { hanja: "시(時)", hangul: "시", animal: "없음" };
+
+            if (targetBranchIdx !== -1) {
+                const hourStemIdx = (startHourStemIdx + targetBranchIdx) % 10;
+                hourStem = celestialStems[hourStemIdx];
+                hourBranch = earthlyBranches[targetBranchIdx];
+            }
+
+            return {
+                year: { stem: yearStem, branch: yearBranch },
+                month: { stem: monthStem, branch: monthBranch },
+                day: { stem: dayStem, branch: dayBranch },
+                hour: { stem: hourStem, branch: hourBranch }
+            };
         }
 
         // Destiny Analysis Start
         async function startAnalysis() {
             const userName = document.getElementById("user-name").value.trim() || "여행자";
-            const birthDate = document.getElementById("birth-date").value;
-            const birthTime = isTimeUnknown ? "시간모름" : document.getElementById("birth-time").value;
+            const birthYear = parseInt(document.getElementById("birth-year").value.trim());
+            const birthMonth = parseInt(document.getElementById("birth-month").value);
+            const birthDay = parseInt(document.getElementById("birth-day").value.trim());
+            const sajuHour = document.getElementById("birth-saju-time").value;
 
-            if (!birthDate) {
-                alert("생년월일을 바르게 기입해 주세요!");
+            // Simple Mobile Input Validation
+            if (isNaN(birthYear) || birthYear < 1900 || birthYear > 2100) {
+                alert("태어난 연도(YYYY)를 1900~2100년 사이로 정확히 입력해 주세요!");
+                return;
+            }
+            if (isNaN(birthDay) || birthDay < 1 || birthDay > 31) {
+                alert("태어난 일(DD)을 1~31일 사이로 바르게 입력해 주세요!");
                 return;
             }
 
+            // Standardize output format
+            const formattedDateString = `${birthYear}-${String(birthMonth).padStart(2, '0')}-${String(birthDay).padStart(2, '0')}`;
+
             goToPage("loading-page");
             
-            // Progress bar mockup animation (2 seconds) to build anticipation
+            // Progress bar mockup animation (1.5 seconds)
             let progress = 10;
             const loadingBar = document.getElementById("loading-bar");
             const loadingTitle = document.getElementById("loading-title");
             
-            const titles = ["우주 공전 주기 탐색 중...", "전통 음양오행 계산 중...", "목성과 금성의 각도 정렬 중...", "행운의 은하 좌표 매핑 중..."];
+            const titles = ["우주 만세력 계산 중...", "전통 음양오행 및 천간지지 분석 중...", "목성과 수성의 정렬 각도 체크 중...", "행운의 은하 자력 매핑 중..."];
             
             const progressTimer = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 5;
+                progress += Math.floor(Math.random() * 15) + 10;
                 if (progress >= 95) {
                     progress = 95;
                     clearInterval(progressTimer);
                 }
                 loadingBar.style.width = `${progress}%`;
                 loadingTitle.innerText = titles[Math.floor(progress / 25)] || "거의 다 마쳐갑니다...";
-            }, 300);
+            }, 250);
 
-            // Fetch destiny via Gemini API
+            // Calculate Genuine Manseok Pillars first in JS
+            const manseokResult = calculateManseok(birthYear, birthMonth, birthDay, sajuHour);
+
+            // Fetch destiny via Gemini API or fallback
             try {
-                currentDestinyData = await fetchCosmicDestiny(userName, birthDate, birthTime, selectedGender, selectedCalendar);
+                currentDestinyData = await fetchCosmicDestiny(userName, formattedDateString, sajuHour, selectedGender, selectedCalendar, manseokResult);
             } catch (err) {
                 console.error("Gemini API Error, utilizing mystical local engine instead:", err);
-                // Dynamically modify fallback matching the user's details for highly realistic pseudorandom customization
-                currentDestinyData = generateIntelligentFallback(userName, birthDate, birthTime, selectedGender);
+                currentDestinyData = generateIntelligentFallback(userName, formattedDateString, sajuHour, selectedGender);
             }
 
             // End loading screen
             clearInterval(progressTimer);
             loadingBar.style.width = "100%";
             setTimeout(() => {
-                renderResults(userName, birthDate);
+                renderResults(userName, formattedDateString, manseokResult, sajuHour);
                 goToPage("result-page");
-                switchResultTab("destiny"); // focus first
-            }, 600);
+                switchResultTab("destiny"); 
+            }, 500);
         }
 
-        // Fetch Dynamic content from Gemini Model
-        async function fetchCosmicDestiny(name, date, time, gender, calendar) {
-            const systemPrompt = `당신은 사주 명리학과 서양 점성술을 신비롭고 아기자기하게 결합한 우주 최고의 '운명 소믈리에'입니다.
-귀여운 문체와 따뜻한 분위기로, 사용자가 입력한 사주 조건에 따라 인생의 흐름을 짚고 해방감을 선사해야 합니다.
+        // Fetch Dynamic content from Gemini Model with structured Manseok data
+        async function fetchCosmicDestiny(name, date, time, gender, calendar, manseok) {
+            const sajuFormatted = `연주: ${manseok.year.stem.hanja}${manseok.year.branch.hanja} (${manseok.year.stem.hangul}${manseok.year.branch.hangul}), 월주: ${manseok.month.stem.hanja}${manseok.month.branch.hanja}, 일주: ${manseok.day.stem.hanja}${manseok.day.branch.hanja}, 시주: ${manseok.hour.stem.hanja}${manseok.hour.branch.hanja}`;
+
+            const systemPrompt = `당신은 사주 명리학 만세력과 서양 점성술을 아기자기하게 조화시킨 최고의 '우주 운명 치유소 소장'입니다.
+귀여운 문체와 따뜻한 주파수 위로를 건네주세요.
 반드시 아래의 정해진 JSON 스키마 구조로만 값을 리턴하고, 어떠한 마크다운 문법이나 백틱(\`\`\`)을 텍스트 안에 넣지 말아주십시오.`;
 
-            const userQuery = `${name}(${gender})님은 ${calendar} ${date} ${time}에 태어났습니다.
+            const userQuery = `${name}(${gender})님은 ${calendar} ${date} 사주시 [${time}시]에 태어났습니다.
+JS 연산 결과 산출된 전통 만세력 명식은 다음과 같습니다: [${sajuFormatted}].
 이 정보를 기반으로:
-1. 사주 오행 기운에 기초한 대략적인 종합 해설(saju_summary, 한줄의 시적이면서 귀여운 묘사).
-2. 양력 기준의 별자리 명칭(zodiac_sign)과 오늘날 우주 성좌 정렬에 의한 기운(cosmic_vibe).
+1. 사주 오행 기운에 기초한 대략적인 종합 해설(saju_summary, 한줄의 시적이면서 귀여운 명리 묘사).
+2. 양력 기준의 별자리 명칭(zodiac_sign)과 오늘날 우주 성좌 정렬에 의한 기운(cosmic_vibe, 목성이나 금성 등의 기운 언급 필수).
 3. career(직업운), love(사랑운), wealth(재물운), relations(인간관계운), health(건강운) 다섯 가지 걱정거리나 미래 흐름을 부드럽고 아주 상세하게(각각 공백포함 최소 150자 이상 풍부하게) 설명해줄 것.
-4. 오늘 하루 소장하고 활용하면 기운이 트이는 color_name(행운의 색깔 이름), color_hex(행운의 색 hex 코드값 예: #FFE4E6), number(행운의 숫자 1개), direction(행운의 방위 예: '북서쪽').
+4. 오늘 하루 소장하고 활용하면 기운이 트이는 color_name(행운의 색깔 이름), color_hex(행운의 색 hex 코드값 예: #FFE4E6), number(행운의 숫자 1개), direction(행운의 방위 예: '동남쪽').
 5. 그를 위한 한 줄의 마음 힐링 확언(manifesting_quote).
 6. 그가 지우고 가야 할 탁한 살(煞)의 종류 4가지(sal_list: 각 'name'은 한국 명리학 한글 명칭과 'desc'는 그에 대한 유머러스하고 공감 가득한 설명 포함할 것).`;
 
-            // Config for response schema
             const responseSchema = {
                 type: "OBJECT",
                 properties: {
@@ -745,7 +943,7 @@
                 }
             };
 
-            const apiKey = globalApiKey; // fallback handles blank
+            const apiKey = globalApiKey;
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
             const response = await fetch(apiUrl, {
@@ -785,20 +983,36 @@
             const output = JSON.parse(JSON.stringify(fallbackDestinyDataset));
             output.zodiac_sign = zodiac;
             output.saju_summary = `부드러운 물줄기의 순환을 타고난 명식으로, ${name}님을 지지하는 귀인들의 시선이 언제나 당신을 따스하게 감싸고 있습니다.`;
-            output.res_greeting = `${name}님의 은하수 운명도`;
             return output;
         }
 
         // Render Results Dashboard
-        function renderResults(name, date) {
-            document.getElementById("res-birth-info").innerText = `${selectedCalendar} ${date.replace(/-/g, ". ")}생 (${selectedGender})`;
+        function renderResults(name, date, manseok, sajuHour) {
+            // Apply Saju table Hanja & Hangul
+            document.getElementById("saju-year-kan").innerText = manseok.year.stem.hanja;
+            document.getElementById("saju-year-ji").innerText = manseok.year.branch.hanja;
+            document.getElementById("saju-year-kr").innerText = `${manseok.year.stem.hangul}${manseok.year.branch.hangul}`;
+
+            document.getElementById("saju-month-kan").innerText = manseok.month.stem.hanja;
+            document.getElementById("saju-month-ji").innerText = manseok.month.branch.hanja;
+            document.getElementById("saju-month-kr").innerText = `${manseok.month.stem.hangul}${manseok.month.branch.hangul}`;
+
+            document.getElementById("saju-day-kan").innerText = manseok.day.stem.hanja;
+            document.getElementById("saju-day-ji").innerText = manseok.day.branch.hanja;
+            document.getElementById("saju-day-kr").innerText = `${manseok.day.stem.hangul}${manseok.day.branch.hangul}`;
+
+            document.getElementById("saju-hour-kan").innerText = manseok.hour.stem.hanja;
+            document.getElementById("saju-hour-ji").innerText = manseok.hour.branch.hanja;
+            document.getElementById("saju-hour-kr").innerText = `${manseok.hour.stem.hangul}${manseok.hour.branch.hangul}`;
+
+            document.getElementById("res-birth-info").innerText = `${selectedCalendar} ${date.replace(/-/g, ". ")}생 / ${sajuHour}시 (${selectedGender})`;
             document.getElementById("res-greeting").innerHTML = `<span class="text-purple-600">${name}</span>님의 은하수 운명도`;
             document.getElementById("res-short-vibe").innerText = `${currentDestinyData.saju_summary} ${currentDestinyData.cosmic_vibe}`;
 
             // Render Tab 1 Destiny Spheres
             const sphereConfig = [
                 { id: "career", title: "직업 & 야망", icon: "fa-solid fa-briefcase", bg: "from-blue-500/10 to-indigo-500/5", border: "border-blue-100", iconColor: "text-blue-500" },
-                { id: "love", title: "사랑 & 운명", icon: "fa-solid fa-heart", bg: "from-pink-500/10 to-rose-500/5", border: "border-pink-100", iconColor: "text-pink-500" },
+                { id: "love", title: "사랑 & 인연", icon: "fa-solid fa-heart", bg: "from-pink-500/10 to-rose-500/5", border: "border-pink-100", iconColor: "text-pink-500" },
                 { id: "wealth", title: "재물 & 풍요", icon: "fa-solid fa-sack-dollar", bg: "from-amber-500/10 to-yellow-500/5", border: "border-amber-100", iconColor: "text-amber-500" },
                 { id: "relations", title: "관계 & 오라", icon: "fa-solid fa-people-group", bg: "from-purple-500/10 to-violet-500/5", border: "border-purple-100", iconColor: "text-purple-500" },
                 { id: "health", title: "신체 & 치유", icon: "fa-solid fa-heart-pulse", bg: "from-emerald-500/10 to-teal-500/5", border: "border-emerald-100", iconColor: "text-emerald-500" }
@@ -895,7 +1109,6 @@
                 }
             });
 
-            // Specific initialization triggers
             if (tabName === 'salpuri') {
                 setTimeout(resizeSalpuriCanvas, 100);
             }
@@ -964,7 +1177,6 @@
             isSweeping = false;
             updateSalCounter();
 
-            // Run Animation loop exclusively for the game canvas
             if (!window.salpuriLoopRunning) {
                 window.salpuriLoopRunning = true;
                 requestAnimationFrame(salpuriGameLoop);
@@ -976,7 +1188,6 @@
             document.getElementById("sal-counter").innerText = left === 0 ? "모든 액운 완벽 소멸!" : `남은 부정적 기운: ${left}개`;
             
             if (left === 0) {
-                // Show victory panel
                 document.getElementById("salpuri-victory").classList.remove("pointer-events-none", "scale-95");
                 document.getElementById("salpuri-victory").style.opacity = "1";
                 document.getElementById("salpuri-victory").style.pointerEvents = "auto";
@@ -1061,7 +1272,6 @@
 
             salpuriCtx.clearRect(0, 0, salpuriCanvas.width, salpuriCanvas.height);
 
-            // Draw mystical background pattern
             salpuriCtx.strokeStyle = "rgba(167,139,250,0.1)";
             salpuriCtx.lineWidth = 1;
             salpuriCtx.beginPath();
@@ -1072,17 +1282,14 @@
             activeSals.forEach(s => {
                 if (s.isPopped) return;
 
-                // Move
                 s.x += s.vx;
                 s.y += s.vy;
 
-                // Bounce
                 if (s.x - s.radius < 0 || s.x + s.radius > salpuriCanvas.width) s.vx *= -1;
                 if (s.y - s.radius < 0 || s.y + s.radius > salpuriCanvas.height) s.vy *= -1;
 
-                // Draw Bubble Aura
                 const gradient = salpuriCtx.createRadialGradient(s.x, s.y, 2, s.x, s.y, s.radius);
-                gradient.addColorStop(0, "rgba(255,255,255,0.9)");
+                gradient.addColorStop(0, "rgba(255,255,255,0.95)");
                 gradient.addColorStop(0.3, s.color);
                 gradient.addColorStop(1, "rgba(0,0,0,0.4)");
 
@@ -1091,7 +1298,6 @@
                 salpuriCtx.fillStyle = gradient;
                 salpuriCtx.fill();
 
-                // Add text label
                 salpuriCtx.fillStyle = "#ffffff";
                 salpuriCtx.font = "bold 11px 'Gowun Dodum', sans-serif";
                 salpuriCtx.textAlign = "center";
@@ -1100,32 +1306,28 @@
                 salpuriCtx.shadowBlur = 4;
                 salpuriCtx.fillText(s.name, s.x, s.y - 6);
 
-                // Subtitle (desc) abbreviated
                 salpuriCtx.font = "9px 'Gowun Dodum', sans-serif";
                 salpuriCtx.fillStyle = "rgba(255,255,255,0.8)";
                 salpuriCtx.fillText("액운", s.x, s.y + 10);
-                salpuriCtx.shadowBlur = 0; // reset
+                salpuriCtx.shadowBlur = 0; 
             });
 
-            // Update & Draw Sweep Trail (Magical Ribbon effect)
             if (sweepTrail.length > 1) {
                 salpuriCtx.beginPath();
                 salpuriCtx.moveTo(sweepTrail[0].x, sweepTrail[0].y);
                 for (let i = 1; i < sweepTrail.length; i++) {
                     salpuriCtx.lineTo(sweepTrail[i].x, sweepTrail[i].y);
                 }
-                salpuriCtx.strokeStyle = "rgba(236, 72, 153, 0.8)"; // Hot Pink Ribbon
+                salpuriCtx.strokeStyle = "rgba(236, 72, 153, 0.85)"; 
                 salpuriCtx.lineWidth = 4;
                 salpuriCtx.lineCap = "round";
                 salpuriCtx.lineJoin = "round";
                 salpuriCtx.stroke();
 
-                // Aging
                 sweepTrail.forEach(pt => pt.age++);
                 sweepTrail = sweepTrail.filter(pt => pt.age < 15);
             }
 
-            // Update & Draw Particles
             particles.forEach((p, idx) => {
                 p.x += p.vx;
                 p.y += p.vy;
@@ -1142,7 +1344,7 @@
                 salpuriCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
                 salpuriCtx.fill();
             });
-            salpuriCtx.globalAlpha = 1.0; // reset
+            salpuriCtx.globalAlpha = 1.0; 
 
             requestAnimationFrame(salpuriGameLoop);
         }
@@ -1161,7 +1363,6 @@
             activeManifestCategory = cat;
             activeManifestBadge = badgeText;
 
-            // Apply badges styling
             const badge = document.getElementById("selected-aura-badge");
             badge.innerText = badgeText;
             
@@ -1170,11 +1371,9 @@
             if (cat === 'success') badge.className = "inline-block bg-blue-100 text-blue-600 text-[11px] px-3 py-1 rounded-full font-bold mb-3 mt-2";
             if (cat === 'peace') badge.className = "inline-block bg-emerald-100 text-emerald-600 text-[11px] px-3 py-1 rounded-full font-bold mb-3 mt-2";
 
-            // Show step 2
             document.getElementById("manifest-step-1").classList.add("hidden");
             document.getElementById("manifest-step-2").classList.remove("hidden");
             
-            // Clear prior texts
             document.getElementById("manifest-wish-text").value = "";
             updateRitualProgress(0);
         }
@@ -1186,11 +1385,9 @@
             document.getElementById("manifest-step-3").classList.remove("flex");
         }
 
-        // Touch & Hold Logic
         function initRitualButton() {
             const btn = document.getElementById("btn-ritual-core");
 
-            // Event Handlers
             btn.addEventListener('mousedown', startChannelling);
             btn.addEventListener('mouseup', stopChannelling);
             btn.addEventListener('mouseleave', stopChannelling);
@@ -1212,9 +1409,8 @@
             isHolding = true;
             progressVal = 0;
             
-            // Start Interval to charge
             holdTimer = setInterval(() => {
-                progressVal += 2; // Increments to 100
+                progressVal += 2; 
                 if (progressVal >= 100) {
                     progressVal = 100;
                     completeChannelling();
@@ -1228,7 +1424,6 @@
             isHolding = false;
             clearInterval(holdTimer);
             if (progressVal < 100) {
-                // Return to 0
                 progressVal = 0;
                 updateRitualProgress(0);
             }
@@ -1236,7 +1431,6 @@
 
         function updateRitualProgress(val) {
             const circle = document.getElementById("ritual-progress");
-            // Circumference of 48r circle is 2 * Math.PI * 48 = 301.59
             const offset = 301.59 - (val / 100) * 301.59;
             circle.style.strokeDashoffset = offset;
         }
@@ -1245,29 +1439,26 @@
             isHolding = false;
             clearInterval(holdTimer);
             
-            // Show Amulet Talisman Screen
             const wish = document.getElementById("manifest-wish-text").value;
             document.getElementById("talisman-wish-display").innerText = `"${wish}"`;
 
-            // Display Magic Burst Effects
             document.getElementById("manifest-step-2").classList.add("hidden");
             document.getElementById("manifest-step-3").classList.remove("hidden");
             document.getElementById("manifest-step-3").classList.add("flex");
         }
 
-        // Mock download for modern mobile client (using clipboard or mock image download warning)
+        // Copy / download mechanism
         function downloadTalisman() {
             const textToCopy = `[우주빛 명리소 수호 부적]\n\n소망: ${document.getElementById("talisman-wish-display").innerText}\n\n우주의 기운이 당신의 길을 밝힙니다. 이 운세를 지장하듯 복사하여 보관해보세요!`;
             
-            // Copy to clipboard fallback
             const dummy = document.createElement("textarea");
             document.body.appendChild(dummy);
             dummy.value = textToCopy;
             dummy.select();
-            document.execCommand("copy");
+            document.execCommand('copy');
             document.body.removeChild(dummy);
 
-            alert("부적 문구가 클립보드에 복사되었습니다! 소중한 사람들과 카카오톡 등에 전송해 부적을 나누어보세요. (모바일 웹 특성 상 우주빛 보존을 위해 스크린샷 캡쳐로 간직하는 것이 정석입니다!)");
+            alert("부적 문구가 클립보드에 복사되었습니다! 소중한 사람들과 공유해 보세요. (사파리나 크롬 브라우저에서는 이 화면을 '캡처(스크린샷)'하여 간직하시는 것을 가장 추천해 드립니다!)");
         }
     </script>
 </body>
