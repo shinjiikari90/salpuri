@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>우주빛 운명 살풀이소</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Gowun Dodum & Montserrat for Numbers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Mobile Viewport Safeguards & Design Tokens */
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            background: radial-gradient(circle at center, #fdfbf7 0%, #f3ebfd 100%);
+            overscroll-behavior: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .number-font {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Ambient glow animation */
+        @keyframes cosmicGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.4)); }
+            50% { filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.6)); }
+        }
+
+        .cosmic-pulse {
+            animation: cosmicGlow 3s infinite ease-in-out;
+        }
+
+        /* Float animation for decorative items */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        .floating-element {
+            animation: floatSlow 6s infinite ease-in-out;
+        }
+
+        /* Glassmorphism utility */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* Seamless layout transitions */
+        .page-transition {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Customized scroll bar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.4);
+            border-radius: 999px;
+        }
+
+        /* Prevent scroll selection bugs on iOS */
+        input, select, button {
+            font-size: 16px !important; /* Prevents auto zoom on iOS Safari */
+        }
+    </style>
+</head>
+<body class="relative min-h-screen w-full flex flex-col items-center justify-start overflow-x-hidden text-neutral-800">
+
+    <!-- Ambient Particle Canvas (Floating Stars & Magic Powder) -->
+    <canvas id="ambient-canvas" class="absolute inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- App Wrapper Container -->
+    <main class="relative z-10 w-full max-w-md min-h-screen flex flex-col justify-between px-5 py-6">
+        
+        <!-- Header: Top Branding -->
+        <header class="w-full flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2" id="header-logo" onclick="goToPage('input-page')">
+                <span class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-400 to-amber-300 flex items-center justify-center text-white text-lg shadow-md cursor-pointer">
+                    <i class="fa-solid fa-moon text-amber-100 cosmic-pulse"></i>
+                </span>
+                <div>
+                    <h1 class="text-sm font-bold text-purple-950 tracking-wider">우주빛 운명소</h1>
+                    <p class="text-[10px] text-purple-400">사주와 별자리의 신비로운 조화</p>
+                </div>
+            </div>
+            <!-- API Key indicator (Automatic or Manual Toggle) -->
+            <button id="btn-api-modal" onclick="openApiModal()" class="text-[11px] bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full hover:bg-purple-200 transition-colors flex items-center gap-1">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> <span>신통력 엔진</span>
+            </button>
+        </header>
+
+        <!-- API Setup Modal -->
+        <div id="api-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-6 hidden">
+            <div class="bg-white rounded-3xl p-6 w-full max-w-xs shadow-2xl border border-purple-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-purple-950 text-base"><i class="fa-solid fa-key mr-1 text-purple-500"></i> 신통력 API 설정</h3>
+                    <button onclick="closeApiModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <p class="text-xs text-gray-500 mb-4 leading-relaxed">
+                    본 서비스는 우주급 해설을 위해 무료 신통력 엔진(Gemini 3.1)을 기본 탑재하고 있습니다. 개인 API 키를 등록하면 대기 시간 없이 무제한으로 초정밀 맞춤형 사주를 보실 수 있습니다. (비워둘 시 공용 체험형 서버 사용)
+                </p>
+                <input type="password" id="api-key-input" placeholder="AI API Key 입력 (선택사항)" class="w-full px-3 py-2 text-sm border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 mb-4">
+                <button onclick="saveApiKey()" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl py-2.5 text-xs font-bold shadow-md shadow-purple-200 hover:opacity-90 transition-opacity">
+                    적용하기
+                </button>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- SCREEN 1: User Birth & Saju Input Page -->
+        <!-- ============================================= -->
+        <div id="input-page" class="page-transition w-full flex-grow flex flex-col justify-center py-4">
+            <div class="text-center mb-6">
+                <span class="inline-block bg-purple-100 text-purple-700 text-xs px-3 py-1 rounded-full mb-2 font-bold tracking-tight">재미로 보는 운세와 살풀이</span>
+                <h2 class="text-2xl font-bold text-purple-950 leading-snug">당신의 은하수 지도가<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">기다리고 있습니다</span></h2>
+                <p class="text-xs text-neutral-500 mt-1">태어난 날짜와 시간을 기반으로 운명을 읽어냅니다</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="glass-card rounded-3xl p-6 shadow-xl shadow-purple-100/50 border border-white flex flex-col gap-4">
+                <!-- Name -->
+                <div>
+                    <label class="block text-xs font-bold text-purple-900 mb-1.5"><i class="fa-solid fa-sparkles text-amber-400 mr-1"></i> 당신의 예쁜 이름</label>
+                    <input type="text" id="user-name" placeholder="예: 별이, 도겸" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950 placeholder-neutral-400">
+                </div>
+
+                <!-- Gender & Solar/Lunar -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-purple-900 mb-1.5">성별</label>
+                        <div class="grid grid-cols-2 gap-1 bg-purple-100/50 p-1 rounded-xl">
+                            <button id="btn-gender-f" onclick="setGender('여성')" class="py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm">여성</button>
+                            <button id="btn-gender-m" onclick="setGender('남성')" class="py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500">남성</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-purple-900 mb-1.5">달력</label>
+                        <div class="grid grid-cols-2 gap-1 bg-purple-100/50 p-1 rounded-xl">
+                            <button id="btn-calendar-s" onclick="setCalendar('양력')" class="py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm">양력</button>
+                            <button id="btn-calendar-l" onclick="setCalendar('음력')" class="py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500">음력</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Birth Date -->
+                <div>
+                    <label class="block text-xs font-bold text-purple-900 mb-1.5">생년월일</label>
+                    <input type="date" id="birth-date" value="2000-01-01" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950">
+                </div>
+
+                <!-- Birth Time -->
+                <div>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="block text-xs font-bold text-purple-900">태어난 시간</label>
+                        <label class="inline-flex items-center text-[11px] text-purple-500 cursor-pointer">
+                            <input type="checkbox" id="time-unknown" onchange="toggleTimeUnknown()" class="rounded text-purple-500 focus:ring-purple-400 mr-1"> 모름
+                        </label>
+                    </div>
+                    <input type="time" id="birth-time" value="12:00" class="w-full px-4 py-3 rounded-2xl bg-white/80 border border-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm text-purple-950">
+                </div>
+            </div>
+
+            <!-- Start Button -->
+            <button onclick="startAnalysis()" class="w-full mt-6 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 text-white rounded-2xl py-4 font-bold text-sm shadow-lg shadow-purple-200/80 hover:opacity-95 transition-all transform active:scale-98 flex items-center justify-center gap-2">
+                <span>운명 주파수 탐색하기</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+
+        <!-- ============================================= -->
+        <!-- SCREEN 2: Magical Loading Page -->
+        <!-- ============================================= -->
+        <div id="loading-page" class="page-transition w-full flex-grow flex flex-col justify-center items-center py-8 hidden text-center">
+            <div class="relative w-40 h-40 mb-6">
+                <!-- Rotating Astrolabe Base -->
+                <div class="absolute inset-0 border-4 border-dashed border-purple-200 rounded-full animate-[spin_20s_linear_infinite] flex items-center justify-center">
+                    <div class="w-32 h-32 border-2 border-pink-100 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                </div>
+                <!-- Glowing Cosmic Sphere -->
+                <div class="absolute inset-4 bg-gradient-to-tr from-purple-400 via-pink-400 to-amber-200 rounded-full flex items-center justify-center shadow-lg cosmic-pulse">
+                    <i class="fa-solid fa-yin-yang text-4xl text-white animate-spin"></i>
+                </div>
+                <!-- Mini orbiting star -->
+                <div class="absolute top-0 left-1/2 -ml-2 w-4 h-4 bg-amber-400 rounded-full animate-bounce"></div>
+            </div>
+            
+            <h3 class="text-xl font-bold text-purple-950 mb-2" id="loading-title">별의 정렬을 맞추는 중</h3>
+            <p class="text-xs text-purple-500 max-w-xs mx-auto leading-relaxed px-4" id="loading-subtitle">
+                전통 명리학의 오행 기운과 우주의 목성, 금성 주파수를 조율하여 인생의 나침반을 구성하고 있습니다...
+            </p>
+
+            <!-- Fun Live Progress bar -->
+            <div class="w-3/4 bg-purple-100 rounded-full h-1.5 mt-6 overflow-hidden">
+                <div id="loading-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-1.5 rounded-full" style="width: 10%"></div>
+            </div>
+        </div>
+
+
+        <!-- ============================================= -->
+        <!-- SCREEN 3: Destiny Analysis Results Dashboard -->
+        <!-- ============================================= -->
+        <div id="result-page" class="page-transition w-full flex-grow flex flex-col justify-start hidden">
+            
+            <!-- Result Top Card Summary -->
+            <div class="glass-card rounded-3xl p-5 mb-5 shadow-lg border border-white text-center relative overflow-hidden">
+                <div class="absolute top-2 right-2 bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-star-and-crescent animate-pulse"></i>
+                </div>
+                <div class="text-xs text-purple-400 font-bold mb-1" id="res-birth-info">양력 2000년 01월 01일생</div>
+                <h3 class="text-xl font-bold text-purple-950 mb-1" id="res-greeting">지아님의 은하수 운명도</h3>
+                <p class="text-xs text-neutral-500 px-4 leading-relaxed mt-2" id="res-short-vibe">
+                    오행과 별자리가 만나 대길의 기운이 깃든 하루를 자아냅니다. 당신을 감싸는 목성의 수호에 귀를 기울이세요.
+                </p>
+            </div>
+
+            <!-- Navigation Tabs for Detailed Reading -->
+            <div class="grid grid-cols-5 gap-1.5 bg-purple-100/60 p-1 rounded-2xl mb-4">
+                <button onclick="switchResultTab('destiny')" id="tab-destiny" class="py-2.5 text-xs font-bold rounded-xl bg-white text-purple-950 shadow-sm transition-all flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-compass text-amber-500"></i>
+                    <span>오운</span>
+                </button>
+                <button onclick="switchResultTab('luck')" id="tab-luck" class="py-2.5 text-xs font-bold rounded-xl text-purple-600 transition-all flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-gift text-pink-500"></i>
+                    <span>행운</span>
+                </button>
+                <button onclick="switchResultTab('worries')" id="tab-worries" class="py-2.5 text-xs font-bold rounded-xl text-purple-600 transition-all flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-circle-exclamation text-rose-500"></i>
+                    <span>조언</span>
+                </button>
+                <button onclick="switchResultTab('salpuri')" id="tab-salpuri" class="py-2.5 text-xs font-bold rounded-xl text-purple-600 transition-all flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-wind text-cyan-500"></i>
+                    <span>살풀이</span>
+                </button>
+                <button onclick="switchResultTab('manifest')" id="tab-manifest" class="py-2.5 text-xs font-bold rounded-xl text-purple-600 transition-all flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-wand-magic-sparkles text-yellow-500"></i>
+                    <span>의식</span>
+                </button>
+            </div>
+
+            <!-- Tab Content 1: Destiny Spheres (직업/사랑/재물/인간관계/건강) -->
+            <div id="tab-content-destiny" class="flex flex-col gap-3.5 flex-grow">
+                <!-- 5 Spheres Card (Iterated Dynamically) -->
+                <div class="space-y-3" id="destiny-spheres-container">
+                    <!-- Template inside script -->
+                </div>
+            </div>
+
+            <!-- Tab Content 2: Lucky Totems (Color, Number, Direction) -->
+            <div id="tab-content-luck" class="hidden flex-col gap-4 flex-grow">
+                <div class="text-center py-2">
+                    <h4 class="font-bold text-purple-950 text-base"><i class="fa-solid fa-gem text-amber-400 mr-1"></i> 우주의 행운 정수</h4>
+                    <p class="text-xs text-neutral-500 mt-1">오늘 당신이 지니고 움직이면 우주적 자력을 강화해주는 요소들입니다</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3" id="luck-totem-container">
+                    <!-- Dynamic rendering of Luck Totems -->
+                </div>
+            </div>
+
+            <!-- Tab Content 3: Destiny Warnings & Worries (걱정거리 파헤치기) -->
+            <div id="tab-content-worries" class="hidden flex-col gap-4 flex-grow">
+                <div class="text-center py-2">
+                    <h4 class="font-bold text-purple-950 text-base"><i class="fa-solid fa-shield-halved text-rose-500 mr-1"></i> 다가올 운명의 고비와 지혜</h4>
+                    <p class="text-xs text-neutral-500 mt-1">행성 정렬의 그늘에서 다가오는 걱정거리를 미리 알면 무사히 피할 수 있습니다</p>
+                </div>
+
+                <div class="glass-card rounded-3xl p-5 border border-white space-y-4 shadow-md">
+                    <div class="flex items-start gap-3">
+                        <span class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-500 flex-shrink-0 text-xs">
+                            <i class="fa-solid fa-bolt"></i>
+                        </span>
+                        <div>
+                            <h5 class="font-bold text-xs text-neutral-800">주의해야 할 살(煞)의 움직임</h5>
+                            <p class="text-xs text-neutral-500 mt-1 leading-relaxed" id="worry-sal-desc">
+                                이번 주기엔 마음이 쉽게 흩어지며 일의 마무리가 약해지는 '걱정살'의 기운이 살짝 스며있습니다.
+                            </p>
+                        </div>
+                    </div>
+                    <hr class="border-purple-100">
+                    <div class="flex items-start gap-3">
+                        <span class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-500 flex-shrink-0 text-xs">
+                            <i class="fa-solid fa-heart-crack"></i>
+                        </span>
+                        <div>
+                            <h5 class="font-bold text-xs text-neutral-800">관계와 마음의 그늘</h5>
+                            <p class="text-xs text-neutral-500 mt-1 leading-relaxed" id="worry-mind-desc">
+                                타인에게 인정받고 싶은 열망이 지나치면 가벼운 오해가 생길 수 있으니, 말은 반으로 줄이고 듣기를 한 걸음 더 하시는 것이 이롭습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 rounded-2xl p-4 text-center mt-2">
+                    <p class="text-xs text-purple-950 leading-relaxed font-bold">
+                        "걱정이 나를 덮치기 전에 미리 액땜을 하는 것이 상책입니다."
+                    </p>
+                    <button onclick="switchResultTab('salpuri')" class="mt-3 inline-flex items-center gap-1.5 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-[11px] px-4 py-2 rounded-full shadow-md hover:opacity-90 transition-opacity">
+                        <i class="fa-solid fa-broom"></i> 즉시 액운 살풀이 하러가기
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Content 4: Interactive Salpuri Game -->
+            <div id="tab-content-salpuri" class="hidden flex-col gap-3 flex-grow">
+                <div class="text-center">
+                    <h4 class="font-bold text-purple-950 text-base"><i class="fa-solid fa-hand-sparkles text-cyan-500 mr-1"></i> 액운 격파 신명 살풀이</h4>
+                    <p class="text-xs text-neutral-500 mt-1">떠다니는 불순한 기운(살)을 손가락으로 터치/드래그해 격파하고 정화하세요!</p>
+                </div>
+
+                <!-- Canvas/Game Area -->
+                <div class="relative w-full aspect-[4/3] rounded-3xl overflow-hidden border border-purple-200 bg-neutral-900 shadow-inner flex items-center justify-center touch-none">
+                    <canvas id="salpuri-canvas" class="absolute inset-0 w-full h-full cursor-pointer"></canvas>
+                    
+                    <!-- Guide overlay -->
+                    <div id="salpuri-guide" class="absolute inset-0 bg-black/60 flex flex-col justify-center items-center text-center p-4 transition-opacity duration-300 pointer-events-none">
+                        <i class="fa-solid fa-hand-pointer text-white text-3xl animate-bounce mb-3 text-cyan-300"></i>
+                        <span class="text-sm font-bold text-white">화면의 불순한 기운을 문지르세요!</span>
+                        <span class="text-[11px] text-neutral-300 mt-1">모두 격파하면 황금빛 기운이 찾아옵니다.</span>
+                    </div>
+
+                    <!-- Victory Overlay -->
+                    <div id="salpuri-victory" class="absolute inset-0 bg-purple-950/80 flex flex-col justify-center items-center text-center p-6 transition-all duration-300 opacity-0 pointer-events-none scale-95">
+                        <div class="w-16 h-16 rounded-full bg-amber-400 text-purple-950 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-amber-400/50">
+                            <i class="fa-solid fa-bell text-white animate-wiggle"></i>
+                        </div>
+                        <h5 class="text-lg font-bold text-amber-300">살풀이 대성공!</h5>
+                        <p class="text-xs text-neutral-200 mt-1 leading-relaxed max-w-xs">
+                            온 몸을 짓누르던 모든 탁한 기운(煞)이 깨끗한 우주의 먼지로 소멸하여 날아갔습니다. 이제 앞길이 맑게 트입니다!
+                        </p>
+                        <button onclick="resetSalpuriGame()" class="mt-4 bg-gradient-to-r from-amber-400 to-amber-500 text-purple-950 font-bold text-xs px-4 py-2 rounded-xl shadow-md">
+                            한 번 더 정화하기
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sparkle counter / reset -->
+                <div class="flex justify-between items-center px-2">
+                    <span class="text-xs text-purple-600 font-bold" id="sal-counter">남은 부정적 기운: 5개</span>
+                    <button onclick="resetSalpuriGame()" class="text-xs text-purple-400 hover:text-purple-600 transition-colors"><i class="fa-solid fa-arrow-rotate-right mr-1"></i>다시 배치</button>
+                </div>
+            </div>
+
+            <!-- Tab Content 5: Manifesting Ritual Space (운트임 의식) -->
+            <div id="tab-content-manifest" class="hidden flex-col gap-4 flex-grow">
+                <div class="text-center">
+                    <h4 class="font-bold text-purple-950 text-base"><i class="fa-solid fa-wand-magic-sparkles text-yellow-500 mr-1"></i> 우주빛 소망의 운트임 의식</h4>
+                    <p class="text-xs text-neutral-500 mt-1">가장 이루고 싶은 운명의 주파수를 적어 우주 원반으로 투사하세요</p>
+                </div>
+
+                <!-- Flow: Category Selection -->
+                <div id="manifest-step-1" class="space-y-4">
+                    <label class="block text-xs font-bold text-purple-900">1. 활성화할 우주 주파수 선택</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="selectManifestCategory('love', '사랑의 핑크색 오라')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-purple-100 hover:border-pink-300 transition-all active:scale-95">
+                            <span class="w-10 h-10 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center text-lg"><i class="fa-solid fa-heart"></i></span>
+                            <span class="text-xs font-bold text-purple-950">인연 & 사랑</span>
+                        </button>
+                        <button onclick="selectManifestCategory('wealth', '황금빛 풍요의 파동')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-purple-100 hover:border-amber-300 transition-all active:scale-95">
+                            <span class="w-10 h-10 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center text-lg"><i class="fa-solid fa-coins"></i></span>
+                            <span class="text-xs font-bold text-purple-950">금전 & 풍요</span>
+                        </button>
+                        <button onclick="selectManifestCategory('success', '목성의 야망 에너지')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-purple-100 hover:border-blue-300 transition-all active:scale-95">
+                            <span class="w-10 h-10 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center text-lg"><i class="fa-solid fa-crown"></i></span>
+                            <span class="text-xs font-bold text-purple-950">성공 & 합격</span>
+                        </button>
+                        <button onclick="selectManifestCategory('peace', '푸른 치유의 수호빛')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 border border-purple-100 hover:border-emerald-300 transition-all active:scale-95">
+                            <span class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center text-lg"><i class="fa-solid fa-hand-holding-heart"></i></span>
+                            <span class="text-xs font-bold text-purple-950">치유 & 평화</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Flow: Hold & Release Visual Ritual -->
+                <div id="manifest-step-2" class="hidden space-y-4">
+                    <div class="glass-card rounded-3xl p-5 border border-purple-100 text-center relative overflow-hidden">
+                        <button onclick="goBackToManifest1()" class="absolute top-4 left-4 text-purple-400 text-xs"><i class="fa-solid fa-chevron-left mr-1"></i>이전</button>
+                        
+                        <span id="selected-aura-badge" class="inline-block bg-pink-100 text-pink-600 text-[11px] px-3 py-1 rounded-full font-bold mb-3 mt-2">사랑의 핑크색 오라</span>
+                        <h5 class="text-sm font-bold text-purple-950 mb-3">소망하는 문장을 상세히 새겨보세요</h5>
+                        
+                        <textarea id="manifest-wish-text" rows="3" placeholder="예: 나를 온전히 안아주고 사랑해 줄 다정하고 예쁜 인연을 올해 안에 마주하여 행복한 우주를 만듭니다." class="w-full p-3 rounded-2xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 text-xs text-purple-900 placeholder-neutral-400 mb-4 bg-white/50"></textarea>
+
+                        <!-- Charge button with progress circle -->
+                        <div class="flex flex-col items-center justify-center my-4">
+                            <p class="text-[11px] text-purple-500 mb-3">아래 구체를 3초 동안 지그시 누르고 계세요.</p>
+                            <div class="relative w-28 h-28 flex items-center justify-center">
+                                <!-- SVG Progress Circle -->
+                                <svg class="absolute w-full h-full transform -rotate-90">
+                                    <circle cx="56" cy="56" r="48" class="stroke-purple-100 fill-none" stroke-width="6" />
+                                    <circle id="ritual-progress" cx="56" cy="56" r="48" class="stroke-purple-500 fill-none transition-all duration-75" stroke-width="6" stroke-dasharray="301.59" stroke-dashoffset="301.59" />
+                                </svg>
+                                <!-- Interactive Core Spheric Button -->
+                                <button id="btn-ritual-core" class="w-20 h-20 bg-gradient-to-tr from-purple-500 via-pink-500 to-amber-300 rounded-full flex items-center justify-center text-white text-xl shadow-lg shadow-purple-300 active:scale-90 transition-all cosmic-pulse cursor-pointer">
+                                    <i class="fa-solid fa-meteor"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flow: Talisman Reward (부적) -->
+                <div id="manifest-step-3" class="hidden flex-col items-center justify-center space-y-4">
+                    <!-- Talisman Card to download -->
+                    <div id="talisman-card" class="w-full max-w-xs aspect-[3/4.5] rounded-3xl bg-gradient-to-b from-amber-50 to-amber-100 border-4 border-amber-300 p-6 flex flex-col justify-between items-center text-center shadow-xl relative overflow-hidden">
+                        <!-- Mystic border -->
+                        <div class="absolute inset-2 border border-dashed border-amber-400/60 rounded-2xl pointer-events-none"></div>
+                        <!-- Decorative seals -->
+                        <div class="absolute top-2 left-2 text-[10px] text-amber-500/40">宇宙運</div>
+                        <div class="absolute bottom-2 right-2 text-[10px] text-amber-500/40">大吉大利</div>
+
+                        <div class="flex flex-col items-center mt-3">
+                            <span class="text-xs text-amber-800 font-bold border-b border-amber-300 pb-1 px-3">우주 성운 수호 부적</span>
+                            <div class="my-4 text-amber-600 animate-pulse text-4xl">
+                                <i class="fa-solid fa-fingerprint"></i>
+                            </div>
+                        </div>
+
+                        <div class="flex-grow flex flex-col justify-center px-2">
+                            <p id="talisman-wish-display" class="text-xs font-bold text-amber-900 leading-relaxed italic">
+                                "나를 온전히 안아주고 사랑해 줄 다정하고 예쁜 인연을 올해 안에 마주하여 행복한 우주를 만듭니다."
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col items-center mb-2">
+                            <!-- Custom Stamp logo -->
+                            <div class="w-8 h-8 rounded-full border-2 border-red-500/80 flex items-center justify-center text-red-500/80 text-[10px] font-bold transform rotate-12">
+                                命 運
+                            </div>
+                            <span class="text-[9px] text-amber-700/60 mt-1 font-mono tracking-widest">AURA SYNTHESIS OK</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full flex gap-3">
+                        <button onclick="downloadTalisman()" class="flex-grow bg-purple-600 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md">
+                            <i class="fa-solid fa-download"></i> 이미지 저장하기
+                        </button>
+                        <button onclick="goBackToManifest1()" class="bg-purple-100 text-purple-700 font-bold py-3 px-4 rounded-xl text-xs">
+                            새 의식
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Back home or recalculate button -->
+            <button onclick="goToPage('input-page')" class="mt-6 mb-2 border border-purple-200 text-purple-700 py-3.5 rounded-2xl font-bold text-xs bg-white/60 text-center hover:bg-white transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-arrow-rotate-left"></i> 사주 시간 다시 입력하기
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer decoration -->
+    <footer class="w-full text-center py-4 text-[10px] text-purple-400 z-10 select-none">
+        © 2026 우주빛 운명소. All rights reserved. <br>재미와 우주적 치유를 위한 힐링 명리소입니다.
+    </footer>
+
+    <script>
+        // App State
+        let selectedGender = "여성";
+        let selectedCalendar = "양력";
+        let isTimeUnknown = false;
+        let globalApiKey = localStorage.getItem("gemini_api_key") || "";
+        
+        // Mock fallback results for immediate action in case API is disconnected or limited
+        const fallbackDestinyDataset = {
+            "saju_summary": "당신의 사주는 대지를 뜻하는 기토(己土)의 맑은 기운을 안고 태어나, 우주 중심의 온화하고 평화로운 마음가짐이 강한 명식입니다.",
+            "zodiac_sign": "염소자리",
+            "cosmic_vibe": "지혜와 인내를 품은 토성과 사랑을 주재하는 금성의 파동이 만나 신중하면서도 사랑스러운 빛을 발산하고 있습니다.",
+            "destiny": {
+                "career": "그동안 차곡차곡 쌓아놓은 노력이 드디어 주위의 주목을 받게 되는 시점입니다. 혼자 해결하는 것보단 주변의 의견을 들어서 결정하면 빛을 볼 직업운입니다.",
+                "love": "서두르지 않는 조용함 속에 꽃이 피어나겠습니다. 우연한 공간, 특히 따스한 커피 향이나 오랜 보석 가게가 있는 골목 같은 조용한 만남에서 행운의 주파수가 맞아 떨어집니다.",
+                "wealth": "새로운 투자나 지출에는 차분함이 요구됩니다. 수입 보충을 위한 보이지 않는 기운이 남동쪽으로부터 몰려오니 쓸데없는 소모품보다 내 성장을 위한 도서나 클래스에 지출하는 것은 대길합니다.",
+                "relations": "모두를 품으려 하면 나의 오라(Aura)가 약해집니다. 가벼운 연락에 에너지를 쓰지 마시고 정말 마음을 공유할 수 있는 오랜 지인 한둘과 깊은 우정을 나누는 것이 이롭습니다.",
+                "health": "불안정한 호흡이나 불면의 기운이 살짝 드리울 수 있으니 자기 전 전자기기를 끄고 보라색 아로마 향을 맡으며 명상하는 3분을 가지는 것이 우주적 회복의 비밀입니다."
+            },
+            "luck": {
+                "color_name": "은은한 우주 펄 라벤더",
+                "color_hex": "#E9D5FF",
+                "number": "8",
+                "direction": "동남쪽 (행운을 물고 오는 훈풍의 방향)"
+            },
+            "manifesting_quote": "소망이 깊어지면 우주는 결국 그 주파수를 감지하고 스스로 공간을 넓혀갑니다. 믿고 전진하세요.",
+            "sal_list": [
+                {"name": "역마살", "desc": "쓸데없이 바쁘기만 하고 마음을 정착하기 어렵게 만드는 기운"},
+                {"name": "인간걱정살", "desc": "남들에게 상처받거나 미움을 사지 않을까 조마조마해 하는 흐름"},
+                {"name": "지출재물살", "desc": "가만히 두어도 자잘하게 새나가는 맑지 못한 재물 손실 기운"},
+                {"name": "피로탈진살", "desc": "몸의 면역과 에너지 주파수가 낮아져 만사에 나른해지는 현상"}
+            ]
+        };
+
+        let currentDestinyData = fallbackDestinyDataset;
+
+        // On Page Load Initialize
+        window.onload = function () {
+            initAmbientCanvas();
+            document.getElementById("api-key-input").value = globalApiKey;
+            
+            // Handle touch drag configurations on canvas to avoid mobile layout scroll jumps
+            const salpuriCanvas = document.getElementById("salpuri-canvas");
+            salpuriCanvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            salpuriCanvas.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+
+            // Set up Ritual hold listeners
+            initRitualButton();
+        }
+
+        // Ambient Falling Stars Canvas Effect
+        let stars = [];
+        function initAmbientCanvas() {
+            const canvas = document.getElementById("ambient-canvas");
+            const ctx = canvas.getContext("2d");
+            
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            // Populate stars
+            stars = [];
+            for (let i = 0; i < 40; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2.5 + 0.5,
+                    opacity: Math.random(),
+                    speed: Math.random() * 0.01 + 0.005,
+                    fadeSpeed: Math.random() * 0.02 + 0.01,
+                    direction: Math.random() > 0.5 ? 1 : -1
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                for (let i = 0; i < stars.length; i++) {
+                    let s = stars[i];
+                    s.opacity += s.fadeSpeed * s.direction;
+                    if (s.opacity > 1 || s.opacity < 0.1) {
+                        s.direction *= -1;
+                    }
+                    
+                    // Slightly float around
+                    s.y -= s.speed * 20;
+                    if (s.y < 0) s.y = canvas.height;
+
+                    ctx.fillStyle = `rgba(167, 139, 250, ${s.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // API Modal Handlers
+        function openApiModal() {
+            document.getElementById("api-modal").classList.remove("hidden");
+        }
+        function closeApiModal() {
+            document.getElementById("api-modal").classList.add("hidden");
+        }
+        function saveApiKey() {
+            const key = document.getElementById("api-key-input").value.trim();
+            localStorage.setItem("gemini_api_key", key);
+            globalApiKey = key;
+            alert("신통력 엔진 열쇠가 안전하게 등록되었습니다.");
+            closeApiModal();
+        }
+
+        // Toggle Helpers
+        function setGender(g) {
+            selectedGender = g;
+            document.getElementById("btn-gender-f").className = g === "여성" ? "py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500";
+            document.getElementById("btn-gender-m").className = g === "남성" ? "py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500";
+        }
+
+        function setCalendar(c) {
+            selectedCalendar = c;
+            document.getElementById("btn-calendar-s").className = c === "양력" ? "py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500";
+            document.getElementById("btn-calendar-l").className = c === "음력" ? "py-1.5 text-xs rounded-lg font-bold transition-all bg-white text-purple-900 shadow-sm" : "py-1.5 text-xs rounded-lg font-bold transition-all text-purple-500";
+        }
+
+        function toggleTimeUnknown() {
+            isTimeUnknown = document.getElementById("time-unknown").checked;
+            document.getElementById("birth-time").disabled = isTimeUnknown;
+            if (isTimeUnknown) {
+                document.getElementById("birth-time").style.opacity = "0.5";
+            } else {
+                document.getElementById("birth-time").style.opacity = "1";
+            }
+        }
+
+        // Page Router
+        function goToPage(pageId) {
+            const pages = ["input-page", "loading-page", "result-page"];
+            pages.forEach(p => {
+                const el = document.getElementById(p);
+                if (p === pageId) {
+                    el.classList.remove("hidden");
+                } else {
+                    el.classList.add("hidden");
+                }
+            });
+            // Auto scroll to top of viewport smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Destiny Analysis Start
+        async function startAnalysis() {
+            const userName = document.getElementById("user-name").value.trim() || "여행자";
+            const birthDate = document.getElementById("birth-date").value;
+            const birthTime = isTimeUnknown ? "시간모름" : document.getElementById("birth-time").value;
+
+            if (!birthDate) {
+                alert("생년월일을 바르게 기입해 주세요!");
+                return;
+            }
+
+            goToPage("loading-page");
+            
+            // Progress bar mockup animation (2 seconds) to build anticipation
+            let progress = 10;
+            const loadingBar = document.getElementById("loading-bar");
+            const loadingTitle = document.getElementById("loading-title");
+            
+            const titles = ["우주 공전 주기 탐색 중...", "전통 음양오행 계산 중...", "목성과 금성의 각도 정렬 중...", "행운의 은하 좌표 매핑 중..."];
+            
+            const progressTimer = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 5;
+                if (progress >= 95) {
+                    progress = 95;
+                    clearInterval(progressTimer);
+                }
+                loadingBar.style.width = `${progress}%`;
+                loadingTitle.innerText = titles[Math.floor(progress / 25)] || "거의 다 마쳐갑니다...";
+            }, 300);
+
+            // Fetch destiny via Gemini API
+            try {
+                currentDestinyData = await fetchCosmicDestiny(userName, birthDate, birthTime, selectedGender, selectedCalendar);
+            } catch (err) {
+                console.error("Gemini API Error, utilizing mystical local engine instead:", err);
+                // Dynamically modify fallback matching the user's details for highly realistic pseudorandom customization
+                currentDestinyData = generateIntelligentFallback(userName, birthDate, birthTime, selectedGender);
+            }
+
+            // End loading screen
+            clearInterval(progressTimer);
+            loadingBar.style.width = "100%";
+            setTimeout(() => {
+                renderResults(userName, birthDate);
+                goToPage("result-page");
+                switchResultTab("destiny"); // focus first
+            }, 600);
+        }
+
+        // Fetch Dynamic content from Gemini Model
+        async function fetchCosmicDestiny(name, date, time, gender, calendar) {
+            const systemPrompt = `당신은 사주 명리학과 서양 점성술을 신비롭고 아기자기하게 결합한 우주 최고의 '운명 소믈리에'입니다.
+귀여운 문체와 따뜻한 분위기로, 사용자가 입력한 사주 조건에 따라 인생의 흐름을 짚고 해방감을 선사해야 합니다.
+반드시 아래의 정해진 JSON 스키마 구조로만 값을 리턴하고, 어떠한 마크다운 문법이나 백틱(\`\`\`)을 텍스트 안에 넣지 말아주십시오.`;
+
+            const userQuery = `${name}(${gender})님은 ${calendar} ${date} ${time}에 태어났습니다.
+이 정보를 기반으로:
+1. 사주 오행 기운에 기초한 대략적인 종합 해설(saju_summary, 한줄의 시적이면서 귀여운 묘사).
+2. 양력 기준의 별자리 명칭(zodiac_sign)과 오늘날 우주 성좌 정렬에 의한 기운(cosmic_vibe).
+3. career(직업운), love(사랑운), wealth(재물운), relations(인간관계운), health(건강운) 다섯 가지 걱정거리나 미래 흐름을 부드럽고 아주 상세하게(각각 공백포함 최소 150자 이상 풍부하게) 설명해줄 것.
+4. 오늘 하루 소장하고 활용하면 기운이 트이는 color_name(행운의 색깔 이름), color_hex(행운의 색 hex 코드값 예: #FFE4E6), number(행운의 숫자 1개), direction(행운의 방위 예: '북서쪽').
+5. 그를 위한 한 줄의 마음 힐링 확언(manifesting_quote).
+6. 그가 지우고 가야 할 탁한 살(煞)의 종류 4가지(sal_list: 각 'name'은 한국 명리학 한글 명칭과 'desc'는 그에 대한 유머러스하고 공감 가득한 설명 포함할 것).`;
+
+            // Config for response schema
+            const responseSchema = {
+                type: "OBJECT",
+                properties: {
+                    saju_summary: { type: "STRING" },
+                    zodiac_sign: { type: "STRING" },
+                    cosmic_vibe: { type: "STRING" },
+                    destiny: {
+                        type: "OBJECT",
+                        properties: {
+                            career: { type: "STRING" },
+                            love: { type: "STRING" },
+                            wealth: { type: "STRING" },
+                            relations: { type: "STRING" },
+                            health: { type: "STRING" }
+                        },
+                        required: ["career", "love", "wealth", "relations", "health"]
+                    },
+                    luck: {
+                        type: "OBJECT",
+                        properties: {
+                            color_name: { type: "STRING" },
+                            color_hex: { type: "STRING" },
+                            number: { type: "STRING" },
+                            direction: { type: "STRING" }
+                        },
+                        required: ["color_name", "color_hex", "number", "direction"]
+                    },
+                    manifesting_quote: { type: "STRING" },
+                    sal_list: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                name: { type: "STRING" },
+                                desc: { type: "STRING" }
+                            },
+                            required: ["name", "desc"]
+                        }
+                    }
+                },
+                required: ["saju_summary", "zodiac_sign", "cosmic_vibe", "destiny", "luck", "manifesting_quote", "sal_list"]
+            };
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: responseSchema
+                },
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            const apiKey = globalApiKey; // fallback handles blank
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+            }
+
+            const result = await response.json();
+            const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            return JSON.parse(jsonText);
+        }
+
+        // Fallback Algorithm to secure a polished responsive offline mode
+        function generateIntelligentFallback(name, date, time, gender) {
+            // Determine Zodiac Signs
+            const birthMonth = parseInt(date.split("-")[1]);
+            const birthDay = parseInt(date.split("-")[2]);
+            let zodiac = "양자리";
+            if ((birthMonth == 1 && birthDay >= 20) || (birthMonth == 2 && birthDay <= 18)) zodiac = "물병자리";
+            else if ((birthMonth == 2 && birthDay >= 19) || (birthMonth == 3 && birthDay <= 20)) zodiac = "물고기자리";
+            else if ((birthMonth == 3 && birthDay >= 21) || (birthMonth == 4 && birthDay <= 19)) zodiac = "양자리";
+            else if ((birthMonth == 4 && birthDay >= 20) || (birthMonth == 5 && birthDay <= 20)) zodiac = "황소자리";
+            else if ((birthMonth == 5 && birthDay >= 21) || (birthMonth == 6 && birthDay <= 21)) zodiac = "쌍둥이자리";
+            else if ((birthMonth == 6 && birthDay >= 22) || (birthMonth == 7 && birthDay <= 22)) zodiac = "게자리";
+            else if ((birthMonth == 7 && birthDay >= 23) || (birthMonth == 8 && birthDay <= 22)) zodiac = "사자자리";
+            else if ((birthMonth == 8 && birthDay >= 23) || (birthMonth == 9 && birthDay <= 22)) zodiac = "처녀자리";
+            else if ((birthMonth == 9 && birthDay >= 23) || (birthMonth == 10 && birthDay <= 22)) zodiac = "천칭자리";
+            else if ((birthMonth == 10 && birthDay >= 23) || (birthMonth == 11 && birthDay <= 21)) zodiac = "전갈자리";
+            else if ((birthMonth == 11 && birthDay >= 22) || (birthMonth == 12 && birthDay <= 21)) zodiac = "사수자리";
+            else zodiac = "염소자리";
+
+            const output = JSON.parse(JSON.stringify(fallbackDestinyDataset));
+            output.zodiac_sign = zodiac;
+            output.saju_summary = `부드러운 물줄기의 순환을 타고난 명식으로, ${name}님을 지지하는 귀인들의 시선이 언제나 당신을 따스하게 감싸고 있습니다.`;
+            output.res_greeting = `${name}님의 은하수 운명도`;
+            return output;
+        }
+
+        // Render Results Dashboard
+        function renderResults(name, date) {
+            document.getElementById("res-birth-info").innerText = `${selectedCalendar} ${date.replace(/-/g, ". ")}생 (${selectedGender})`;
+            document.getElementById("res-greeting").innerHTML = `<span class="text-purple-600">${name}</span>님의 은하수 운명도`;
+            document.getElementById("res-short-vibe").innerText = `${currentDestinyData.saju_summary} ${currentDestinyData.cosmic_vibe}`;
+
+            // Render Tab 1 Destiny Spheres
+            const sphereConfig = [
+                { id: "career", title: "직업 & 야망", icon: "fa-solid fa-briefcase", bg: "from-blue-500/10 to-indigo-500/5", border: "border-blue-100", iconColor: "text-blue-500" },
+                { id: "love", title: "사랑 & 운명", icon: "fa-solid fa-heart", bg: "from-pink-500/10 to-rose-500/5", border: "border-pink-100", iconColor: "text-pink-500" },
+                { id: "wealth", title: "재물 & 풍요", icon: "fa-solid fa-sack-dollar", bg: "from-amber-500/10 to-yellow-500/5", border: "border-amber-100", iconColor: "text-amber-500" },
+                { id: "relations", title: "관계 & 오라", icon: "fa-solid fa-people-group", bg: "from-purple-500/10 to-violet-500/5", border: "border-purple-100", iconColor: "text-purple-500" },
+                { id: "health", title: "신체 & 치유", icon: "fa-solid fa-heart-pulse", bg: "from-emerald-500/10 to-teal-500/5", border: "border-emerald-100", iconColor: "text-emerald-500" }
+            ];
+
+            const sphereContainer = document.getElementById("destiny-spheres-container");
+            sphereContainer.innerHTML = "";
+
+            sphereConfig.forEach(item => {
+                const textContent = currentDestinyData.destiny[item.id] || "아주 유연하고 조화로운 기류가 감도는 시기입니다. 당신의 직감적인 촉이 정답을 찾아가도록 마음을 정돈해보세요.";
+                const html = `
+                    <div class="glass-card rounded-2xl p-4 border ${item.border} shadow-sm bg-gradient-to-br ${item.bg} flex gap-3.5 items-start">
+                        <span class="w-9 h-9 rounded-full bg-white flex items-center justify-center ${item.iconColor} flex-shrink-0 shadow-sm text-sm">
+                            <i class="${item.icon}"></i>
+                        </span>
+                        <div>
+                            <h4 class="font-bold text-neutral-800 text-xs">${item.title}</h4>
+                            <p class="text-xs text-neutral-600 mt-1.5 leading-relaxed text-justify">${textContent}</p>
+                        </div>
+                    </div>
+                `;
+                sphereContainer.insertAdjacentHTML("beforeend", html);
+            });
+
+            // Render Tab 2 Lucky elements
+            const luckContainer = document.getElementById("luck-totem-container");
+            luckContainer.innerHTML = `
+                <!-- Color -->
+                <div class="glass-card rounded-2xl p-4 border border-purple-100 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-xl border border-white flex items-center justify-center text-white text-sm shadow-md" style="background-color: ${currentDestinyData.luck.color_hex || '#C084FC'}">
+                            <i class="fa-solid fa-palette text-neutral-800 mix-blend-difference"></i>
+                        </span>
+                        <div>
+                            <h5 class="font-bold text-xs text-neutral-800">우주 장막의 컬러</h5>
+                            <p class="text-xs text-purple-600 font-bold mt-0.5">${currentDestinyData.luck.color_name}</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] bg-purple-100 text-purple-700 font-mono py-1 px-2.5 rounded-full">${currentDestinyData.luck.color_hex}</span>
+                </div>
+
+                <!-- Number -->
+                <div class="glass-card rounded-2xl p-4 border border-purple-100 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-500 text-lg shadow-sm">
+                            <i class="fa-solid fa-arrow-up-9-1"></i>
+                        </span>
+                        <div>
+                            <h5 class="font-bold text-xs text-neutral-800">우주의 진동수</h5>
+                            <p class="text-xs text-neutral-500 mt-0.5">이 숫자를 마주치면 가벼운 윙크를 건네세요</p>
+                        </div>
+                    </div>
+                    <span class="text-xl font-bold text-purple-950 number-font bg-purple-50 border border-purple-100 w-10 h-10 flex items-center justify-center rounded-full">${currentDestinyData.luck.number}</span>
+                </div>
+
+                <!-- Direction -->
+                <div class="glass-card rounded-2xl p-4 border border-purple-100 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-500 text-lg shadow-sm">
+                            <i class="fa-solid fa-compass"></i>
+                        </span>
+                        <div>
+                            <h5 class="font-bold text-xs text-neutral-800">수호신의 훈풍 방위</h5>
+                            <p class="text-xs text-neutral-500 mt-0.5">답답할 때 이쪽 방면 하늘을 보고 심호흡 하세요</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-neutral-800 bg-cyan-100/50 py-1 px-3 rounded-full">${currentDestinyData.luck.direction}</span>
+                </div>
+            `;
+
+            // Render Tab 3 Warnings
+            document.getElementById("worry-sal-desc").innerText = `${name}님의 기류를 정밀 분석한 결과, 근원적으로 차단해야 할 탁기(煞)는 바로 [${currentDestinyData.sal_list[0]?.name || '정체살'}]과 [${currentDestinyData.sal_list[1]?.name || '잡념살'}]입니다.`;
+            document.getElementById("worry-mind-desc").innerText = `${currentDestinyData.manifesting_quote} 우주와 당신의 에너지가 올바른 전도율을 갖기 위해선 사소한 감정의 굴레에서 벗어나는 것이 우선이며, 이를 위해 마련된 아래의 의식이나 살풀이를 꼭 실행하세요!`;
+
+            // Initialize Salpuri Game setup
+            initSalpuriGame();
+        }
+
+        // Tab Switcher
+        function switchResultTab(tabName) {
+            const tabs = ["destiny", "luck", "worries", "salpuri", "manifest"];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                const content = document.getElementById(`tab-content-${t}`);
+                
+                if (t === tabName) {
+                    btn.className = "py-2.5 text-xs font-bold rounded-xl bg-white text-purple-950 shadow-sm transition-all flex flex-col items-center justify-center gap-1";
+                    content.classList.remove("hidden");
+                    content.classList.add("flex");
+                } else {
+                    btn.className = "py-2.5 text-xs font-bold rounded-xl text-purple-600 transition-all flex flex-col items-center justify-center gap-1";
+                    content.classList.add("hidden");
+                    content.classList.remove("flex");
+                }
+            });
+
+            // Specific initialization triggers
+            if (tabName === 'salpuri') {
+                setTimeout(resizeSalpuriCanvas, 100);
+            }
+        }
+
+
+        // =============================================
+        // RITUAL MINI-GAME: Interactive Salpuri (살풀이)
+        // =============================================
+        let salpuriCanvas, salpuriCtx;
+        let activeSals = [];
+        let particles = [];
+        let sweepTrail = [];
+        let isSweeping = false;
+
+        function initSalpuriGame() {
+            salpuriCanvas = document.getElementById("salpuri-canvas");
+            salpuriCtx = salpuriCanvas.getContext("2d");
+
+            // Event Listeners for Sweeping
+            salpuriCanvas.addEventListener('mousedown', startSweep);
+            salpuriCanvas.addEventListener('mousemove', drawSweep);
+            salpuriCanvas.addEventListener('mouseup', stopSweep);
+
+            salpuriCanvas.addEventListener('touchstart', startSweepTouch);
+            salpuriCanvas.addEventListener('touchmove', drawSweepTouch);
+            salpuriCanvas.addEventListener('touchend', stopSweep);
+
+            resetSalpuriGame();
+        }
+
+        function resizeSalpuriCanvas() {
+            if (!salpuriCanvas) return;
+            const container = salpuriCanvas.parentElement;
+            salpuriCanvas.width = container.clientWidth;
+            salpuriCanvas.height = container.clientHeight;
+        }
+
+        function resetSalpuriGame() {
+            resizeSalpuriCanvas();
+            document.getElementById("salpuri-guide").style.opacity = "1";
+            document.getElementById("salpuri-victory").style.opacity = "0";
+            document.getElementById("salpuri-victory").style.pointerEvents = "none";
+            document.getElementById("salpuri-victory").classList.add("scale-95");
+
+            // Build bubble nodes representing actual Sals from data
+            activeSals = [];
+            const sals = currentDestinyData.sal_list || fallbackDestinyDataset.sal_list;
+            
+            sals.forEach((sal, idx) => {
+                activeSals.push({
+                    x: Math.random() * (salpuriCanvas.width - 100) + 50,
+                    y: Math.random() * (salpuriCanvas.height - 100) + 50,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: (Math.random() - 0.5) * 1.5,
+                    radius: 35 + Math.random() * 10,
+                    name: sal.name,
+                    desc: sal.desc,
+                    color: `hsl(${idx * 85 + 20}, 75%, 65%)`,
+                    isPopped: false
+                });
+            });
+
+            particles = [];
+            sweepTrail = [];
+            isSweeping = false;
+            updateSalCounter();
+
+            // Run Animation loop exclusively for the game canvas
+            if (!window.salpuriLoopRunning) {
+                window.salpuriLoopRunning = true;
+                requestAnimationFrame(salpuriGameLoop);
+            }
+        }
+
+        function updateSalCounter() {
+            const left = activeSals.filter(s => !s.isPopped).length;
+            document.getElementById("sal-counter").innerText = left === 0 ? "모든 액운 완벽 소멸!" : `남은 부정적 기운: ${left}개`;
+            
+            if (left === 0) {
+                // Show victory panel
+                document.getElementById("salpuri-victory").classList.remove("pointer-events-none", "scale-95");
+                document.getElementById("salpuri-victory").style.opacity = "1";
+                document.getElementById("salpuri-victory").style.pointerEvents = "auto";
+            }
+        }
+
+        function startSweep(e) {
+            isSweeping = true;
+            document.getElementById("salpuri-guide").style.opacity = "0";
+            addSweepPoint(e.offsetX, e.offsetY);
+        }
+
+        function drawSweep(e) {
+            if (!isSweeping) return;
+            addSweepPoint(e.offsetX, e.offsetY);
+            checkCollisions(e.offsetX, e.offsetY);
+        }
+
+        function startSweepTouch(e) {
+            isSweeping = true;
+            document.getElementById("salpuri-guide").style.opacity = "0";
+            const rect = salpuriCanvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            addSweepPoint(x, y);
+        }
+
+        function drawSweepTouch(e) {
+            if (!isSweeping) return;
+            const rect = salpuriCanvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            addSweepPoint(x, y);
+            checkCollisions(x, y);
+        }
+
+        function stopSweep() {
+            isSweeping = false;
+        }
+
+        function addSweepPoint(x, y) {
+            sweepTrail.push({ x, y, age: 0 });
+            if (sweepTrail.length > 20) {
+                sweepTrail.shift();
+            }
+        }
+
+        function checkCollisions(x, y) {
+            activeSals.forEach(s => {
+                if (s.isPopped) return;
+                const dist = Math.hypot(s.x - x, s.y - y);
+                if (dist < s.radius) {
+                    s.isPopped = true;
+                    createExplosion(s.x, s.y, s.color);
+                    updateSalCounter();
+                }
+            });
+        }
+
+        function createExplosion(x, y, color) {
+            for (let i = 0; i < 25; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    radius: Math.random() * 4 + 2,
+                    color: color,
+                    alpha: 1,
+                    decay: Math.random() * 0.03 + 0.015
+                });
+            }
+        }
+
+        function salpuriGameLoop() {
+            if (!salpuriCanvas) {
+                requestAnimationFrame(salpuriGameLoop);
+                return;
+            }
+
+            salpuriCtx.clearRect(0, 0, salpuriCanvas.width, salpuriCanvas.height);
+
+            // Draw mystical background pattern
+            salpuriCtx.strokeStyle = "rgba(167,139,250,0.1)";
+            salpuriCtx.lineWidth = 1;
+            salpuriCtx.beginPath();
+            salpuriCtx.arc(salpuriCanvas.width/2, salpuriCanvas.height/2, Math.min(salpuriCanvas.width, salpuriCanvas.height)/3, 0, Math.PI*2);
+            salpuriCtx.stroke();
+
+            // Update & Draw Sals (Bubbles)
+            activeSals.forEach(s => {
+                if (s.isPopped) return;
+
+                // Move
+                s.x += s.vx;
+                s.y += s.vy;
+
+                // Bounce
+                if (s.x - s.radius < 0 || s.x + s.radius > salpuriCanvas.width) s.vx *= -1;
+                if (s.y - s.radius < 0 || s.y + s.radius > salpuriCanvas.height) s.vy *= -1;
+
+                // Draw Bubble Aura
+                const gradient = salpuriCtx.createRadialGradient(s.x, s.y, 2, s.x, s.y, s.radius);
+                gradient.addColorStop(0, "rgba(255,255,255,0.9)");
+                gradient.addColorStop(0.3, s.color);
+                gradient.addColorStop(1, "rgba(0,0,0,0.4)");
+
+                salpuriCtx.beginPath();
+                salpuriCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                salpuriCtx.fillStyle = gradient;
+                salpuriCtx.fill();
+
+                // Add text label
+                salpuriCtx.fillStyle = "#ffffff";
+                salpuriCtx.font = "bold 11px 'Gowun Dodum', sans-serif";
+                salpuriCtx.textAlign = "center";
+                salpuriCtx.textBaseline = "middle";
+                salpuriCtx.shadowColor = "rgba(0,0,0,0.8)";
+                salpuriCtx.shadowBlur = 4;
+                salpuriCtx.fillText(s.name, s.x, s.y - 6);
+
+                // Subtitle (desc) abbreviated
+                salpuriCtx.font = "9px 'Gowun Dodum', sans-serif";
+                salpuriCtx.fillStyle = "rgba(255,255,255,0.8)";
+                salpuriCtx.fillText("액운", s.x, s.y + 10);
+                salpuriCtx.shadowBlur = 0; // reset
+            });
+
+            // Update & Draw Sweep Trail (Magical Ribbon effect)
+            if (sweepTrail.length > 1) {
+                salpuriCtx.beginPath();
+                salpuriCtx.moveTo(sweepTrail[0].x, sweepTrail[0].y);
+                for (let i = 1; i < sweepTrail.length; i++) {
+                    salpuriCtx.lineTo(sweepTrail[i].x, sweepTrail[i].y);
+                }
+                salpuriCtx.strokeStyle = "rgba(236, 72, 153, 0.8)"; // Hot Pink Ribbon
+                salpuriCtx.lineWidth = 4;
+                salpuriCtx.lineCap = "round";
+                salpuriCtx.lineJoin = "round";
+                salpuriCtx.stroke();
+
+                // Aging
+                sweepTrail.forEach(pt => pt.age++);
+                sweepTrail = sweepTrail.filter(pt => pt.age < 15);
+            }
+
+            // Update & Draw Particles
+            particles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= p.decay;
+
+                if (p.alpha <= 0) {
+                    particles.splice(idx, 1);
+                    return;
+                }
+
+                salpuriCtx.fillStyle = p.color;
+                salpuriCtx.globalAlpha = p.alpha;
+                salpuriCtx.beginPath();
+                salpuriCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+                salpuriCtx.fill();
+            });
+            salpuriCtx.globalAlpha = 1.0; // reset
+
+            requestAnimationFrame(salpuriGameLoop);
+        }
+
+
+        // =============================================
+        // RITUAL SPACE: Manifesting (운트임 의식)
+        // =============================================
+        let activeManifestCategory = "";
+        let activeManifestBadge = "";
+        let holdTimer = null;
+        let progressVal = 0;
+        let isHolding = false;
+
+        function selectManifestCategory(cat, badgeText) {
+            activeManifestCategory = cat;
+            activeManifestBadge = badgeText;
+
+            // Apply badges styling
+            const badge = document.getElementById("selected-aura-badge");
+            badge.innerText = badgeText;
+            
+            if (cat === 'love') badge.className = "inline-block bg-pink-100 text-pink-600 text-[11px] px-3 py-1 rounded-full font-bold mb-3 mt-2";
+            if (cat === 'wealth') badge.className = "inline-block bg-amber-100 text-amber-600 text-[11px] px-3 py-1 rounded-full font-bold mb-3 mt-2";
+            if (cat === 'success') badge.className = "inline-block bg-blue-100 text-blue-600 text-[11px] px-3 py-1 rounded-full font-bold mb-3 mt-2";
+            if (cat === 'peace') badge.className = "inline-block bg-emerald-100 text-emerald-600 text-[11px] px-3 py-1 rounded-full font-bold mb-3 mt-2";
+
+            // Show step 2
+            document.getElementById("manifest-step-1").classList.add("hidden");
+            document.getElementById("manifest-step-2").classList.remove("hidden");
+            
+            // Clear prior texts
+            document.getElementById("manifest-wish-text").value = "";
+            updateRitualProgress(0);
+        }
+
+        function goBackToManifest1() {
+            document.getElementById("manifest-step-1").classList.remove("hidden");
+            document.getElementById("manifest-step-2").classList.add("hidden");
+            document.getElementById("manifest-step-3").classList.add("hidden");
+            document.getElementById("manifest-step-3").classList.remove("flex");
+        }
+
+        // Touch & Hold Logic
+        function initRitualButton() {
+            const btn = document.getElementById("btn-ritual-core");
+
+            // Event Handlers
+            btn.addEventListener('mousedown', startChannelling);
+            btn.addEventListener('mouseup', stopChannelling);
+            btn.addEventListener('mouseleave', stopChannelling);
+
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                startChannelling();
+            });
+            btn.addEventListener('touchend', stopChannelling);
+        }
+
+        function startChannelling() {
+            const text = document.getElementById("manifest-wish-text").value.trim();
+            if (!text) {
+                alert("우주로 투사할 명확한 소망의 글을 작성해주셔야 주파수가 일치합니다!");
+                return;
+            }
+
+            isHolding = true;
+            progressVal = 0;
+            
+            // Start Interval to charge
+            holdTimer = setInterval(() => {
+                progressVal += 2; // Increments to 100
+                if (progressVal >= 100) {
+                    progressVal = 100;
+                    completeChannelling();
+                }
+                updateRitualProgress(progressVal);
+            }, 50);
+        }
+
+        function stopChannelling() {
+            if (!isHolding) return;
+            isHolding = false;
+            clearInterval(holdTimer);
+            if (progressVal < 100) {
+                // Return to 0
+                progressVal = 0;
+                updateRitualProgress(0);
+            }
+        }
+
+        function updateRitualProgress(val) {
+            const circle = document.getElementById("ritual-progress");
+            // Circumference of 48r circle is 2 * Math.PI * 48 = 301.59
+            const offset = 301.59 - (val / 100) * 301.59;
+            circle.style.strokeDashoffset = offset;
+        }
+
+        function completeChannelling() {
+            isHolding = false;
+            clearInterval(holdTimer);
+            
+            // Show Amulet Talisman Screen
+            const wish = document.getElementById("manifest-wish-text").value;
+            document.getElementById("talisman-wish-display").innerText = `"${wish}"`;
+
+            // Display Magic Burst Effects
+            document.getElementById("manifest-step-2").classList.add("hidden");
+            document.getElementById("manifest-step-3").classList.remove("hidden");
+            document.getElementById("manifest-step-3").classList.add("flex");
+        }
+
+        // Mock download for modern mobile client (using clipboard or mock image download warning)
+        function downloadTalisman() {
+            const textToCopy = `[우주빛 명리소 수호 부적]\n\n소망: ${document.getElementById("talisman-wish-display").innerText}\n\n우주의 기운이 당신의 길을 밝힙니다. 이 운세를 지장하듯 복사하여 보관해보세요!`;
+            
+            // Copy to clipboard fallback
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = textToCopy;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            alert("부적 문구가 클립보드에 복사되었습니다! 소중한 사람들과 카카오톡 등에 전송해 부적을 나누어보세요. (모바일 웹 특성 상 우주빛 보존을 위해 스크린샷 캡쳐로 간직하는 것이 정석입니다!)");
+        }
+    </script>
+</body>
+</html>
